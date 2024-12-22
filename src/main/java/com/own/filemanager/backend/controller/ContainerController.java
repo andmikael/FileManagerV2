@@ -29,7 +29,7 @@ public class ContainerController {
         this.blobStorage = blobStorage;
     }
 
-    @GetMapping("/container")
+    @GetMapping("/api/container")
     public String populateDropDown(Model model, RedirectAttributes redirectAttrs){
         if (!this.blobStorage.init()) {
             redirectAttrs.addFlashAttribute("message", "Wrong connection string!");
@@ -44,9 +44,9 @@ public class ContainerController {
         return "container";
     }
 
-    @PostMapping(value="/selectContainer")
+    @PostMapping(value="/api/selectContainer")
     public String handleContainerSelection(@RequestBody String postBody, Model model, RedirectAttributes redirectAttribs) {
-        if (postBody.contains("delete-button")) {
+        /*if (postBody.contains("delete-button")) {
             if (postBody.contains("container-name=")) {
                 String containerName = postBody.substring(15, postBody.indexOf("\n")-1);
                 blobStorage.createContainer(containerName);
@@ -71,11 +71,12 @@ public class ContainerController {
                 redirectAttribs.addFlashAttribute("message", "No container selected");
                 return "redirect:/container";
             }
-        }
+        }*/
+        System.out.println(postBody);
         return "redirect:/index";
     }
 
-    @PostMapping(value="/createContainer")
+    @PostMapping(value="/api/createContainer")
     public String handleContainerCreation(@RequestBody String postBody, Model model) {
         String containerName = postBody.substring(15, postBody.indexOf("\n")-1);
         blobStorage.createContainer(containerName);

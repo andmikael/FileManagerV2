@@ -44,7 +44,7 @@ public class FileController {
         return "index";
     }
 
-    @PostMapping(value="/uploadFile")
+    @PostMapping(value="/api/uploadFile")
     public String handleFileUpload(@RequestBody MultipartFile file, Model model, RedirectAttributes redirectAttribs) {
         String result = blobStorage.uploadFile(file, file.getOriginalFilename());
         switch (result) {
