@@ -2,13 +2,20 @@ button {
     background-color: #6200ea;
     color: #fff;
     border: none;
-    padding: 10px 25px;
+    padding: 10px 15px;
     font-size: 16px;
+    margin: 0px 5px;
     text-transform: uppercase;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: all 0.3s ease;
+}
+
+h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
  button.hover {
@@ -25,9 +32,12 @@ select {
 }
 
 #cont-name {
-    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 92%;
     font-size: 16px;
-    padding: 10px 25px;
+    padding: 15px 15px;
     margin: 10px 0px;
     border: none;
     border-radius: 5px;
@@ -36,9 +46,13 @@ select {
 
 #dropdown {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#create-button {
+.button-row {
+    display: flex;
     justify-content: center;
-    margin: 0px 20px;
+    align-items: center;
 }

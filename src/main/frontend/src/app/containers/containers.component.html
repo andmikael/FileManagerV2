@@ -23,10 +23,14 @@
 		<!--<form id ="container-creator" method="POST" enctype="text/plain" th:action="@{/createContainer}">-->
         <form id ="container-creator" method="POST" enctype="text/plain">
 			<div>
-				<input type="text" id="cont-name" name="container-name"><br>
-				<button type="submit" id="create-button" name="create-button">
-					Create container
-				</button>
+                <div class="input-row">
+                    <input type="text" id="cont-name" name="container-name">
+                </div>
+                <div class="button-row">
+                    <button type="submit" id="create-button" name="create-button">
+                        Create container
+                    </button>
+                </div>
 			</div>
 		</form>
 	</div>
