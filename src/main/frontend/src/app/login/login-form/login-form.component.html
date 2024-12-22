@@ -1,8 +1,13 @@
 <form #loginForm="ngForm" id ="login-form" method="POST" enctype="text/plain" (ngSubmit)="onLoginSubmit(loginForm)">
-    <div>
-        <input type="text" id="cont-name" name="connString" ngModel><br>
-        <button type="submit" id="connect-to-container" name="connect-button">
-            Connect to storage account
-        </button>
+    <div id="input-field">
+        <div class="text-row">
+            <input type="text" id="cont-name" name="connString" ngModel>
+        </div>
+        <div class="button-row">
+            <button type="submit" id="connect-to-container" name="connect-button">
+                Connect
+            </button>
+        
+        </div>    
     </div>
 </form>

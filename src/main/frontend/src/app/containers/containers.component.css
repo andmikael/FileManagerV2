@@ -1,0 +1,44 @@
+button {
+    background-color: #6200ea;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    font-size: 16px;
+    text-transform: uppercase;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+ button.hover {
+    background-color: #3700b3;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+select {
+    width: 40%;
+    padding: 10px 25px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#cont-name {
+    width: 100%;
+    font-size: 16px;
+    padding: 10px 25px;
+    margin: 10px 0px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#dropdown {
+    width: 100%;
+}
+
+#create-button {
+    justify-content: center;
+    margin: 0px 20px;
+}

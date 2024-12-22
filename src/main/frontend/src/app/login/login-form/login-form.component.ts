@@ -13,5 +13,6 @@ export class LoginFormComponent {
 
   onLoginSubmit(loginForm: NgForm) {
     this.EmitLoginString.emit(loginForm.value["connString"]);
+    loginForm.resetForm();
   }
 }
