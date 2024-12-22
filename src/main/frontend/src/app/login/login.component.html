@@ -1,0 +1,19 @@
+<html>
+    <body>
+		<!--<div id="error-text" th:if="${message}">
+			<h2 th:text="${message}">
+		</div> -->
+        <div class ="login-container">
+		    <h2>Type the connection string</h2>
+		<!--<form id ="login-form" method="POST" enctype="text/plain" th:action="@{/loginContainer}">-->
+            <form id ="login-form" method="POST" enctype="text/plain">
+			    <div>
+				    <input type="text" id="cont-name" name="container-name"><br>
+				    <button type="submit" id="connect-to-container" name="connect-button">
+					    Connect to storage account
+				    </button>
+			    </div>
+		    </form>
+	    </div>
+    </body>
+</html>

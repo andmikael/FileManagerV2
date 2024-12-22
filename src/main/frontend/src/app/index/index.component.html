@@ -1,0 +1,24 @@
+<html>
+    <body>
+    	<div class ="upload-container">
+    		<!--<div id="error-text" th:if="${message}">
+    			<h2 th:text="${message}">
+    		</div>-->
+    		<h2>Choose a file to upload</h2>
+    		<!--<form id = "image-uploader" method="POST" enctype="multipart/form-data" th:action="@{/uploadFile}">-->
+            <form id = "image-uploader" method="POST" enctype="multipart/form-data">    
+                <div id="file-selection">
+                    <label for="file-button" id="file-label"></label>
+                    <input id="file-button" type="file" name="file"/>
+    		        <button type="submit" id="upload-button" name="upload-button">
+    			        Upload file
+    		        </button>
+                </div>
+    		</form>
+    		<!--<h2 th:text="|files in ${container}:|"></h2>	
+            <ul id="bloblist">
+                <li th:each="blob:${blobs}" th:text="${blob.getName()}" th:value="${blob.getName()}"></li>
+            </ul>-->
+    	</div>
+    </body>
+</html>
