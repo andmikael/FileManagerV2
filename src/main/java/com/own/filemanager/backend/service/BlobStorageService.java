@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.azure.core.http.rest.PagedIterable;
+import com.azure.core.http.rest.Response;
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
@@ -76,8 +77,8 @@ public class BlobStorageService implements BlobStorage {
     }
 
     @Override
-    public void createContainer(String containerName) {
-        this.containerClient = client.createBlobContainerIfNotExists(containerName);
+    public Response<?> createContainer(String containerName) {
+        return client.createBlobContainerIfNotExistsWithResponse(containerName, null, null);
     }
 
     @Override
