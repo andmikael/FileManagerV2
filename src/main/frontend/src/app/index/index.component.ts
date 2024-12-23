@@ -61,7 +61,7 @@ export class IndexComponent implements OnInit {
           this.uploadStatus = 'completed';
         },
         error: (error) => {
-          console.log(error); 
+          console.log(error);
           this.uploadStatus = 'error';
         }})
  
