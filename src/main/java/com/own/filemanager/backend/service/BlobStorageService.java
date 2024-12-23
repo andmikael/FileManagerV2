@@ -33,7 +33,6 @@ public class BlobStorageService implements BlobStorage {
     @Override
     public void setConnString(String connString) {
         this.connectionString = connString;
-
     }   
 
     @Override 
@@ -49,6 +48,11 @@ public class BlobStorageService implements BlobStorage {
 
         listOfBlobContainers = this.fetchBlobContainers();
         return true;
+    }
+
+    @Override
+    public Boolean getClientState() {
+        return this.client != null;
     }
 
     @Override

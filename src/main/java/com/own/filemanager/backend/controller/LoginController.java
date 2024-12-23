@@ -3,7 +3,6 @@ package com.own.filemanager.backend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +21,7 @@ public class LoginController {
     }
 
     @PostMapping("/api/login")
-    public ResponseEntity<String> handleLogin(@RequestBody String postBody, Model model) {
+    public ResponseEntity<String> handleLogin(@RequestBody String postBody) {
         this.blobStorage.setConnString(postBody);
         if(!this.blobStorage.init()) {
             return new ResponseEntity<>("Invalid connection string", HttpStatus.UNAUTHORIZED);

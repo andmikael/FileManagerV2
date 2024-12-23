@@ -32,19 +32,23 @@ public class ContainerController {
 
     @GetMapping("/api/container")
     public ResponseEntity<?> populateDropDown(){
-        List<String> blobs = new ArrayList<>();
-        PagedIterable<BlobContainerItem> foundBlobs = blobStorage.getBlobContainers();
-        for (BlobContainerItem elem : foundBlobs) {
-            blobs.add(elem.getName());
+        List<String> containers = new ArrayList<>();
+        PagedIterable<BlobContainerItem> foundContainers = blobStorage.getBlobContainers();
+        if (foundContainers == null) {
+            return new ResponseEntity<>("", HttpStatus.OK);
+        }
+        for (BlobContainerItem elem : foundContainers) {
+            containers.add(elem.getName());  
         }
         Gson gson = new Gson();
-        String json = gson.toJson(blobs);
+        String json = gson.toJson(containers);
         return new ResponseEntity<>(json, HttpStatus.OK);
     }
 
     @PostMapping(value="/api/selectcontainer")
     public ResponseEntity<?> handleContainerSelection(@RequestBody String postBody) {
         blobStorage.createContainer(postBody);
+        blobStorage.setContainerClient(blobStorage.getContainerClient(postBody));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

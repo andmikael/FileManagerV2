@@ -10,6 +10,7 @@ import com.azure.storage.blob.models.BlobItem;
 
 public interface BlobStorage {
     Boolean init();
+    Boolean getClientState();
     void setConnString(String connString) throws java.lang.IllegalArgumentException;
     PagedIterable<BlobContainerItem> fetchBlobContainers();
     PagedIterable<BlobContainerItem> getBlobContainers();

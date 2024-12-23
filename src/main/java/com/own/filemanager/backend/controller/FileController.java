@@ -1,6 +1,10 @@
 package com.own.filemanager.backend.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.storage.blob.models.BlobItem;
+import com.google.gson.Gson;
 import com.own.filemanager.backend.service.BlobStorage;
 import com.own.filemanager.backend.service.FileStorage;
 import com.own.filemanager.backend.service.StorageFileNotFoundException;
@@ -33,31 +38,35 @@ public class FileController {
         this.blobStorage = blobStorage;
     }
 
-    @GetMapping("/index")
-    public String switchControllers(Model model, RedirectAttributes redirectAttribs){
+    @GetMapping(value="/api/index")
+    public ResponseEntity<?> switchControllers(Model model, RedirectAttributes redirectAttribs){
         if (blobStorage.getCurrentContainerClient() == null) {
-            return "redirect:/";
+            System.out.println("no container selected");
+            return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
-        model.addAttribute("container", blobStorage.getCurrentContainerClient().getBlobContainerName());
+        String containerName = blobStorage.getCurrentContainerClient().getBlobContainerName();
         this.listOfBlobs = blobStorage.getBlobs();
-        model.addAttribute("blobs", this.listOfBlobs);
-        return "index";
+        List<String> allBlobs = new ArrayList<>();
+        for (BlobItem elem : this.listOfBlobs) {
+            allBlobs.add(elem.getName());
+        }
+        Gson gson = new Gson();
+        String json = gson.toJson(allBlobs);
+        return new ResponseEntity<>(json, HttpStatus.OK);
     }
 
-    @PostMapping(value="/api/uploadFile")
-    public String handleFileUpload(@RequestBody MultipartFile file, Model model, RedirectAttributes redirectAttribs) {
+    @PostMapping(value="/api/index/uploadfile")
+    public ResponseEntity<?> handleFileUpload(@RequestBody MultipartFile file) {
         String result = blobStorage.uploadFile(file, file.getOriginalFilename());
         switch (result) {
             case "error" -> {
-                redirectAttribs.addFlashAttribute("message", "Encountered error while uploading");
-                return "redirect:/index";
+                return new ResponseEntity<>("Encountered an error while trying to upload file", HttpStatus.INTERNAL_SERVER_ERROR);
             }
             case "too-large" -> {
-                redirectAttribs.addFlashAttribute("message", "Filesize exceeds 5MB.");
-                return "redirect:/index";
+                return new ResponseEntity<>("File size exceeds 5MB", HttpStatus.PAYLOAD_TOO_LARGE);
             }
             default -> {
-                return "redirect:/index";
+                return new ResponseEntity<>("OK", HttpStatus.OK);
             }
         }
     }
