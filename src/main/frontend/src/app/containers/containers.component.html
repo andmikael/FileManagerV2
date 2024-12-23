@@ -4,7 +4,7 @@
         <form id ="container-selector" method="POST" enctype="text/plain">    
 			<div>
 				<select id = "dropdown" name="container-name" [(ngModel)]="selectedContainer">
-					<option *ngFor="let container of receivedData" [value]="container" >{{container}}</option>
+					<option *ngFor="let container of receivedData" >{{container}}</option>
 				</select>
 				<br><br>
 				<button type="submit" id="select-button" name="select-button" (click)="selectContainer()">

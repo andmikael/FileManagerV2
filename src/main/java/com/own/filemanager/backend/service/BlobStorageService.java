@@ -84,7 +84,7 @@ public class BlobStorageService implements BlobStorage {
     @Override
     public BlobContainerClient getCurrentContainerClient() {
         return this.containerClient;
-    }
+    }   
 
     @Override
     public PagedIterable<BlobItem> getBlobs() {
@@ -92,8 +92,14 @@ public class BlobStorageService implements BlobStorage {
     }
 
     @Override
-    public Boolean deleteContainer() {
-        return containerClient.deleteIfExists();
+    public Response<?> deleteContainer(String containerName) {
+        BlobContainerClient currentContainerClient = client.getBlobContainerClient(containerName);
+        if (currentContainerClient.exists()) {
+            System.out.println("container client exists");
+        } else {
+            System.out.println("container doesnt exist");
+        }
+        return client.deleteBlobContainerWithResponse(containerName, null);
     }
 
     @Override

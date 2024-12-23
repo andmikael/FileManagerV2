@@ -50,11 +50,22 @@ public class ContainerController {
 
     @PostMapping(value="/api/deletecontainer")
     public ResponseEntity<?> handleContainerDeletion(@RequestBody String postBody) {
-        blobStorage.createContainer(postBody);
-        if(!blobStorage.deleteContainer()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (postBody.isEmpty()) {
+            return new ResponseEntity<>("Container doesnt exist", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        int statusCode = 0;
+        try {
+            Response<?> result = blobStorage.deleteContainer(postBody);
+            statusCode = result.getStatusCode();
+        } catch (Exception e) {
+            if (e.getMessage().contains("404")) {
+                statusCode = 404;
+            }
+        }
+        if (statusCode == 404) {
+            return new ResponseEntity<>("Container doesnt exist", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>("Container Deleted", HttpStatus.ACCEPTED);
     }
 
     @PostMapping(value="/api/createcontainer")

@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { getActiveConsumer } from '@angular/core/primitives/signals';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { firstValueFrom, fromEvent, Observable } from 'rxjs';
+import { firstValueFrom, fromEvent, lastValueFrom, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-containers',
@@ -14,7 +14,7 @@ import { firstValueFrom, fromEvent, Observable } from 'rxjs';
 })
 export class ContainersComponent implements OnInit{
 
-  receivedData: any
+  receivedData: String[] = [];
   selectedContainer: any;
 
 
@@ -26,21 +26,35 @@ export class ContainersComponent implements OnInit{
   @Output() EmitContainerString: EventEmitter<JSON> = new EventEmitter<JSON>();
 
   ngOnInit(): void {
-    this.getContainers()
-    .then(data => {
-      this.receivedData = data;
-    }).catch(e => {
-      console.log(e)
-    })
+    if (this.receivedData.length == 0) {
+      this.populateContainerList();
+    } else {
+      this.selectedContainer = this.receivedData[0];
+    }
   }
 
   async getContainers(): Promise<any> {
     try {
-      return await firstValueFrom(
+      return lastValueFrom(
         this.http.get("http://localhost:8080/api/container"));
     } catch (e) {
-      console.log(e);
+      console.log("error while trying to get containers: " + e);
     }
+  }
+
+  async populateContainerList() {
+    await this.getContainers()
+    .then(data => {
+      console.log(data);
+      this.receivedData = data;
+      if (this.receivedData.length > 0) {
+        this.selectedContainer = this.receivedData[0];
+      } else {
+        this.selectedContainer = "";
+      }
+    }).catch(e => {
+      console.log("error while trying to populate dropdownlist: " + e)
+    })
   }
 
   selectContainer() {  
@@ -50,20 +64,27 @@ export class ContainersComponent implements OnInit{
           this.navigateToIndex();
         },
         error: (error) => { 
-          console.error(error);
+          console.error("error while selecting container: " + error);
         }
       });
     }
 
   deleteContainer() {
-    this.http.post("http://localhost:8080/api/deletecontainer", this.selectedContainer)
+    this.receivedData = this.receivedData.filter(element => element !== this.selectedContainer)
+    this.http.post("http://localhost:8080/api/deletecontainer", this.selectedContainer, {responseType: 'text', observe: 'response'})
     .subscribe({
       next: (response) => {
+        console.log(response);
       },
       error: (error) => { 
-        console.error(error);
+        console.error("error whilwe deleting container: " + error);
       }
     });
+    if (this.receivedData.length > 0) {
+      this.selectedContainer = this.receivedData[0];
+    } else {
+      this.selectedContainer = "";
+    }
   }
 
   onCreateSubmit(containerForm: NgForm) {
@@ -75,7 +96,7 @@ export class ContainersComponent implements OnInit{
         }
       },
       error: (error) => {
-        console.log(error);
+        console.log("error while creating container: "+error);
       }
     })
   }
