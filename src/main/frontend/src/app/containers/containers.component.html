@@ -1,14 +1,10 @@
 <body>
 	<div class="form-container">
-		<!--<div id="error-text" th:if="${message}">
-			<h2 th:text="${message}">
-		</div> -->
 		<h2 id = "welcome">Manage an existing container</h2>
-		<!--<form id ="container-selector" method="POST" enctype="text/plain" th:action="@{/selectContainer}">-->
         <form id ="container-selector" method="POST" enctype="text/plain">    
 			<div>
 				<select id = "dropdown" name="container-name">
-					<!--<option th:each="cont:${containers}" th:text="${cont}" th:value="${cont}"></option>-->
+					<option *ngFor="let container of receivedData">{{container}}</option>
 				</select>
 				<br><br>
 				<button type="submit" id="select-button" name="select-button">
@@ -20,7 +16,6 @@
 			</div>
 		</form>	
 		<h2 id="create-message">Or create a new one</h2>
-		<!--<form id ="container-creator" method="POST" enctype="text/plain" th:action="@{/createContainer}">-->
         <form id ="container-creator" method="POST" enctype="text/plain">
 			<div>
                 <div class="input-row">

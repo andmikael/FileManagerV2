@@ -3,6 +3,7 @@ import { LoginFormComponent } from "./login-form/login-form.component";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { lastValueFrom, Observable, of, map, take } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -15,11 +16,12 @@ export class LoginComponent {
   errorMessage: string = '';
   http: HttpClient = inject(HttpClient);
   router: Router = inject(Router);
+  containers: any
 
-  login(data: JSON) {    
+  async login(data: JSON) {    
     this.http.post("http://localhost:8080/api/login", data)
     .subscribe({
-      next: (response) => { 
+      next: (response) => {
         this.navigateToContainer();
       },
       error: (error) => { 
@@ -31,6 +33,6 @@ export class LoginComponent {
   }
 
   navigateToContainer() {
-    this.router.navigateByUrl("/containers");
+    this.router.navigate(["/containers"]);
   }
 }
