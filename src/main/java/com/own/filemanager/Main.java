@@ -1,5 +1,5 @@
 package com.own.filemanager;
-import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,22 +26,27 @@ public class Main {
     public Main(FileStorageService file, BlobStorageService blobService) {
         Main.file = file;
         Main.blobService = blobService;
+        
     }
     public static void main(String[] args) throws InterruptedException {
         ApplicationContext context = SpringApplication.run(Main.class, args);
         file.init();
     }
 
+
+
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
-        corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
+
+        corsConfiguration.setAllowedOrigins(List.of(System.getenv("CORS_URL")));
+        corsConfiguration.setAllowedHeaders(List.of("Origin", "Access-Control-Allow-Origin", "Content-Type",
             "Accept", "Authorization", "Origin, Accept", "X-Request-Headers"));
-        corsConfiguration.setExposedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization",
+        corsConfiguration.setExposedHeaders(List.of("Origin", "Content-Type", "Accept", "Authorization",
             "Access-Control-Allow-Origin", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
-        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "DELETE"));
+
         UrlBasedCorsConfigurationSource urlBasedConfigurationSource = new UrlBasedCorsConfigurationSource();
         urlBasedConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return new CorsFilter(urlBasedConfigurationSource);

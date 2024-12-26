@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { lastValueFrom, Observable, of, map, take } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -18,8 +19,10 @@ export class LoginComponent {
   router: Router = inject(Router);
   containers: any
 
+  private apiUrl = environment.apiUrl;
+
   async login(data: JSON) {    
-    this.http.post("http://localhost:8080/api/login", data)
+    this.http.post(`${this.apiUrl}`+'/api/login', data, {headers: {'Access-Control-Allow-Origin': '*'}})
     .subscribe({
       next: (response) => {
         this.navigateToContainer();

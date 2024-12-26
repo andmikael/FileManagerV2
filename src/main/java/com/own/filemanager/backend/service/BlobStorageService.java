@@ -37,6 +37,9 @@ public class BlobStorageService implements BlobStorage {
 
     @Override 
     public Boolean init() {
+        if (client == null && connectionString == null) {
+            return false;
+        } 
         try {
             this.client = new BlobServiceClientBuilder()
             .endpoint(this.urlPrefix)

@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +24,6 @@ import com.own.filemanager.backend.service.StorageFileNotFoundException;
 
 
 @Controller
-@CrossOrigin("http://localhost:8080")
 public class FileController {
 
     private final FileStorage fileStorage;
@@ -40,8 +38,11 @@ public class FileController {
 
     @GetMapping(value="/api/index")
     public ResponseEntity<?> switchControllers(Model model, RedirectAttributes redirectAttribs){
+        if(!this.blobStorage.init()) {
+            return new ResponseEntity<>("unauthorized", HttpStatus.UNAUTHORIZED);
+        }
+
         if (blobStorage.getCurrentContainerClient() == null) {
-            System.out.println("no container selected");
             return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
         String containerName = blobStorage.getCurrentContainerClient().getBlobContainerName();
@@ -57,6 +58,10 @@ public class FileController {
 
     @PostMapping(value="/api/index/uploadfile")
     public ResponseEntity<?> handleFileUpload(@RequestBody MultipartFile file) {
+        if(!this.blobStorage.init()) {
+            return new ResponseEntity<>("unauthorized", HttpStatus.UNAUTHORIZED);
+        }
+
         String result = blobStorage.uploadFile(file, file.getOriginalFilename());
         switch (result) {
             case "error" -> {

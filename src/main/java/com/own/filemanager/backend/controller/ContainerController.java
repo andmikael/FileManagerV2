@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +20,6 @@ import com.own.filemanager.backend.service.BlobStorage;
 import com.own.filemanager.backend.service.StorageFileNotFoundException;
 
 @Controller
-@CrossOrigin("http://localhost:8080")
 public class ContainerController {
     private final BlobStorage blobStorage;
 
@@ -32,6 +30,10 @@ public class ContainerController {
 
     @GetMapping("/api/container")
     public ResponseEntity<?> populateDropDown(){
+        if(!this.blobStorage.init()) {
+            return new ResponseEntity<>("unauthorized", HttpStatus.UNAUTHORIZED);
+        }
+
         List<String> containers = new ArrayList<>();
         PagedIterable<BlobContainerItem> foundContainers = blobStorage.getBlobContainers();
         if (foundContainers == null) {
@@ -47,6 +49,10 @@ public class ContainerController {
 
     @PostMapping(value="/api/selectcontainer")
     public ResponseEntity<?> handleContainerSelection(@RequestBody String postBody) {
+        if(!this.blobStorage.init()) {
+            return new ResponseEntity<>("unauthorized", HttpStatus.UNAUTHORIZED);
+        }
+
         blobStorage.createContainer(postBody);
         blobStorage.setContainerClient(blobStorage.getContainerClient(postBody));
         return new ResponseEntity<>(HttpStatus.OK);
@@ -54,6 +60,10 @@ public class ContainerController {
 
     @PostMapping(value="/api/deletecontainer")
     public ResponseEntity<?> handleContainerDeletion(@RequestBody String postBody) {
+        if(!this.blobStorage.init()) {
+            return new ResponseEntity<>("unauthorized", HttpStatus.UNAUTHORIZED);
+        }
+
         if (postBody.isEmpty()) {
             return new ResponseEntity<>("Container doesnt exist", HttpStatus.NOT_FOUND);
         }
@@ -74,6 +84,10 @@ public class ContainerController {
 
     @PostMapping(value="/api/createcontainer")
     public ResponseEntity<?> handleContainerCreation(@RequestBody String postBody) {
+        if(!this.blobStorage.init()) {
+            return new ResponseEntity<>("unauthorized", HttpStatus.UNAUTHORIZED);
+        }
+
         int statusCode = 0;
         try {
             Response<?> result = blobStorage.createContainer(postBody);

@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonEngine } from '@angular/ssr/node';
 import { UploadService } from '../services/upload.services';
 import { lastValueFrom } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-index',
@@ -19,6 +20,7 @@ export class IndexComponent implements OnInit {
   uploadStatus: string = 'waiting';
 
   blobs: String[] = []
+  private apiUrl = environment.apiUrl;
 
   http: HttpClient = inject(HttpClient);
   router: Router = inject(Router);
@@ -30,7 +32,7 @@ export class IndexComponent implements OnInit {
     async getBlobs(): Promise<any> {
       try {
         return lastValueFrom(
-          this.http.get("http://localhost:8080/api/index"));
+          this.http.get(`${this.apiUrl}`+"/api/index"));
       } catch (e) {
         console.log("error while trying to get blobs: " + e);
       }
@@ -54,7 +56,6 @@ export class IndexComponent implements OnInit {
     if (this.selectedFile) {
       this.uploadStatus = 'inProgress';
  
-      // Simulate upload with a timeout (replace this with actual upload logic)
       this.uploadService.uploadFile(this.selectedFile).subscribe({
         next: (response) => {
           console.log(response);
@@ -64,8 +65,7 @@ export class IndexComponent implements OnInit {
           console.log(error);
           this.uploadStatus = 'error';
         }})
- 
-      // Add error handling and actual upload logic as needed
+
     } else {
       alert("Please select a file before uploading.");
     }
