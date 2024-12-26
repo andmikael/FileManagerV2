@@ -45,7 +45,7 @@ public class Main {
             "Accept", "Authorization", "Origin, Accept", "X-Request-Headers"));
         corsConfiguration.setExposedHeaders(List.of("Origin", "Content-Type", "Accept", "Authorization",
             "Access-Control-Allow-Origin", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "DELETE"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "DELETE", "OPTIONS"));
 
         UrlBasedCorsConfigurationSource urlBasedConfigurationSource = new UrlBasedCorsConfigurationSource();
         urlBasedConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
