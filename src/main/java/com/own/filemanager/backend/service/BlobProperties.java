@@ -20,7 +20,11 @@ public class BlobProperties {
         return this.endpointString;
     }
 
-    public void setUrlPrefix() {
-        this.endpointString = "https://thisisnottaken.blob.core.windows.net/";
+    public void setUrlPrefix(String type) {
+        if (type.contains("trial")) {
+            this.endpointString = System.getenv("AZURE_TRIAL_STORAGE_ENDPOINT");
+        } else {
+            this.endpointString = System.getenv("AZURE_STORAGE_URL_ENDPOINT");
+        }
     }
 }

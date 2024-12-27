@@ -18,6 +18,7 @@ import com.azure.storage.blob.models.BlobItem;
 public class BlobStorageService implements BlobStorage {
     private PagedIterable<BlobContainerItem> listOfBlobContainers;
     private String connectionString = null;
+    private String accountType = null;
     private String urlPrefix = null;
     private BlobServiceClient client = null;
     private BlobContainerClient containerClient = null;
@@ -25,8 +26,6 @@ public class BlobStorageService implements BlobStorage {
     @Autowired
     public BlobStorageService(BlobProperties properties) {
         this.connectionString = properties.getConnectionStr();
-        properties.setUrlPrefix();
-        this.urlPrefix = properties.getUrlPrefix();
     }
 
     @Override
@@ -38,12 +37,26 @@ public class BlobStorageService implements BlobStorage {
     public Boolean init() {
         if (client == null && connectionString == null) {
             return false;
-        } 
+        }
+
+        if (this.connectionString.contains("trial")) {
+            try {
+                this.client = new BlobServiceClientBuilder()
+                .endpoint(System.getenv("AZURE_TRIAL_STORAGE_ENDPOINT"))
+                .connectionString(System.getenv("TRIAL_CONN_STRING"))
+                .buildClient();
+                this.accountType = "trial";
+            } catch(java.lang.IllegalArgumentException e) {
+                return false;
+            }
+            return true;
+        }
         try {
             this.client = new BlobServiceClientBuilder()
-            .endpoint(this.urlPrefix)
+            .endpoint(System.getenv("AZURE_STORAGE_URL_ENDPOINT"))
             .connectionString(this.connectionString)
             .buildClient();
+            this.accountType = "user";
         } catch(java.lang.IllegalArgumentException e) {
             return false;
         }
@@ -55,6 +68,11 @@ public class BlobStorageService implements BlobStorage {
     @Override
     public Boolean getClientState() {
         return this.client != null;
+    }
+
+    @Override
+    public String getAccountType() {
+        return this.accountType;
     }
 
     @Override

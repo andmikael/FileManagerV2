@@ -8,9 +8,12 @@
 	  </section>
 	</div>
 	<div class="file-div">
+		<form #uploadForm ="ngForm" (ngSubmit)="onUploadSubmit(uploadForm)">  
 		<input type="file" class="upload-input" (change)="handleFileSelection($event)" #fileInput />
 		<!-- Upload button -->
-		<button id="upload-button" (click)="uploadFile()">Upload</button>
+		<button type="submit" id="upload-button">Upload</button>
+		<!-- <button type="submit" id="upload-button" (click)="uploadFile()">Upload</button> -->
+		</form>	
 	</div>
 
 	<div *ngIf="selectedFile">
@@ -26,6 +29,6 @@
 </div>
 <div id="blob-div">
 	<ul id="bloblist">
-		<li *ngFor="let blob of blobs" >{{blob}}</li>
+		<li *ngFor="let blob of blobs$ | async">{{blob}}</li>
 	</ul>
 </div>

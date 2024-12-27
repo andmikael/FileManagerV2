@@ -39,4 +39,18 @@ export class LoginComponent {
   navigateToContainer() {
     this.router.navigate(["/containers"]);
   }
+
+  selectTrialAccount() {
+    this.http.post(`${this.apiUrl}`+'/api/login/', "trial", {headers: {'Access-Control-Allow-Origin': '*'}})
+    .subscribe({
+      next: (response) => {
+        this.navigateToContainer();
+      },
+      error: (error) => { 
+        console.error(error);
+        this.showError = true;
+        this.errorMessage = 'was unable to login to trial account'; 
+      }
+    });
+  }
 }

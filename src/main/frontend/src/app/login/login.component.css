@@ -5,7 +5,39 @@ body {
     margin: 1rem auto;
     display: flex;
     height: 100%;
+}
+
+button {
+    background-color: #6200ea;
+    color: #fff;
+    border: none;
+    padding: 10px 30px;
+    font-size: 16px;
+    text-transform: uppercase;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+ button.hover {
+    background-color: #3700b3;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+#trial-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#trial-button-row {
+    display: flex;
     justify-content: center;
     align-items: center;
 }
