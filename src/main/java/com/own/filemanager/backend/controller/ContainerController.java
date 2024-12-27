@@ -7,19 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.storage.blob.models.BlobContainerItem;
 import com.nimbusds.jose.shaded.gson.Gson;
 import com.own.filemanager.backend.service.BlobStorage;
-import com.own.filemanager.backend.service.StorageFileNotFoundException;
 
 @Controller
+@RequestMapping("/api/containers")
 public class ContainerController {
     private final BlobStorage blobStorage;
 
@@ -28,9 +28,10 @@ public class ContainerController {
         this.blobStorage = blobStorage;
     }
 
-    @GetMapping("/api/container")
+    @GetMapping("/")
     public ResponseEntity<?> populateDropDown(){
         if(!this.blobStorage.init()) {
+            System.out.println("unauthorized");
             return new ResponseEntity<>("unauthorized", HttpStatus.UNAUTHORIZED);
         }
 
@@ -47,9 +48,10 @@ public class ContainerController {
         return new ResponseEntity<>(json, HttpStatus.OK);
     }
 
-    @PostMapping(value="/api/selectcontainer")
+    @PostMapping(value="/selectcontainer")
     public ResponseEntity<?> handleContainerSelection(@RequestBody String postBody) {
         if(!this.blobStorage.init()) {
+            System.out.println("unauthorized");
             return new ResponseEntity<>("unauthorized", HttpStatus.UNAUTHORIZED);
         }
 
@@ -58,9 +60,10 @@ public class ContainerController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping(value="/api/deletecontainer")
+    @PostMapping(value="/deletecontainer")
     public ResponseEntity<?> handleContainerDeletion(@RequestBody String postBody) {
         if(!this.blobStorage.init()) {
+            System.out.println("unauthorized");
             return new ResponseEntity<>("unauthorized", HttpStatus.UNAUTHORIZED);
         }
 
@@ -82,9 +85,10 @@ public class ContainerController {
         return new ResponseEntity<>("Container Deleted", HttpStatus.ACCEPTED);
     }
 
-    @PostMapping(value="/api/createcontainer")
+    @PostMapping(value="/createcontainer")
     public ResponseEntity<?> handleContainerCreation(@RequestBody String postBody) {
         if(!this.blobStorage.init()) {
+            System.out.println("unauthorized");
             return new ResponseEntity<>("unauthorized", HttpStatus.UNAUTHORIZED);
         }
 
@@ -102,11 +106,4 @@ public class ContainerController {
         }
         return new ResponseEntity<>("Container created", HttpStatus.CREATED);
     }
-    
-    @ExceptionHandler(StorageFileNotFoundException.class)
-    public ResponseEntity<?>
-    handleStorageFileNotFound(StorageFileNotFoundException exc) {
-        return ResponseEntity.notFound().build();
-    }
-
 }

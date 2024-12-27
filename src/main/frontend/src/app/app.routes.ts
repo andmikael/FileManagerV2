@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
+import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
-import { ContainersComponent } from './containers/containers.component';
-import { IndexComponent } from './index/index.component';
 
 export const routes: Routes = [
-    {path: '', component: LoginComponent },
-    {path: 'containers', component: ContainersComponent },
-    {path: 'index', component: IndexComponent },
+    {path: '', pathMatch: 'full', component: LoginComponent },
+    {path: 'containers', loadChildren: () => import('./containers/containers.routes').then(c => c.routes) },
+    {path: 'index', loadChildren: () => import('./index/index.routes').then(c => c.routes) },
+    {path: '**', component: LoginComponent }
 ];

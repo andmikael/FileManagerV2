@@ -9,6 +9,7 @@ import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-containers',
+  standalone: true,
   imports: [RouterModule, CommonModule, FormsModule],
   templateUrl: './containers.component.html',
   styleUrl: './containers.component.css'
@@ -38,7 +39,7 @@ export class ContainersComponent implements OnInit{
   async getContainers(): Promise<any> {
     try {
       return lastValueFrom(
-        this.http.get(`${this.apiUrl}`+"/api/container"));
+        this.http.get(`${this.apiUrl}`+"/api/containers/"));
     } catch (e) {
       console.log("error while trying to get containers: " + e);
     }
@@ -59,7 +60,7 @@ export class ContainersComponent implements OnInit{
   }
 
   selectContainer() {  
-      this.http.post(`${this.apiUrl}`+"/api/selectcontainer", this.selectedContainer)
+      this.http.post(`${this.apiUrl}`+"/api/containers/selectcontainer", this.selectedContainer)
       .subscribe({
         next: (response) => {
           this.navigateToIndex();
@@ -72,7 +73,7 @@ export class ContainersComponent implements OnInit{
 
   deleteContainer() {
     this.receivedData = this.receivedData.filter(element => element !== this.selectedContainer)
-    this.http.post(`${this.apiUrl}`+"/api/deletecontainer", this.selectedContainer, {responseType: 'text', observe: 'response'})
+    this.http.post(`${this.apiUrl}`+"/api/containers/deletecontainer", this.selectedContainer, {responseType: 'text', observe: 'response'})
     .subscribe({
       next: (response) => {
       },
@@ -88,7 +89,7 @@ export class ContainersComponent implements OnInit{
   }
 
   onCreateSubmit(containerForm: NgForm) {
-    this.http.post(`${this.apiUrl}`+"/api/createcontainer", containerForm.value["container-name"], {responseType: 'text', observe: 'response'})
+    this.http.post(`${this.apiUrl}`+"/api/containers/createcontainer", containerForm.value["container-name"], {responseType: 'text', observe: 'response'})
     .subscribe({
       next: (response) => {
         if (response.status == 201) {

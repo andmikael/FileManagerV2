@@ -1,54 +1,31 @@
-<html>
-	<body>
-		<div class="file-info">
-					<!-- Display upload status -->
-		<section [ngSwitch]="uploadStatus">
-			<p *ngSwitchCase="'inProgress'">⏳ Uploading, please wait...</p>
-			<p *ngSwitchCase="'completed'">✅ File uploaded successfully!</p>
-			<p *ngSwitchCase="'error'">❌ An error occurred during upload.</p>
-			<p *ngSwitchDefault>🔄 Ready to upload your file.</p>
-		  </section>
-		</div>
-
-		<div class="file-div">
-			<input type="file" class="upload-input" (change)="handleFileSelection($event)" #fileInput />
-			<!-- Upload button -->
-			<button id="upload-button" (click)="uploadFile()">Upload</button>
-		</div>
-	
-		<div *ngIf="selectedFile">
-		<!-- Display file details -->
-		<section class="file-details">
-		  <h3>File Details:</h3>
-		  <ul>
-			<li><strong>Filename:</strong> {{selectedFile.name}}</li>
-			<li><strong>File Type:</strong> {{selectedFile.type}}</li>
-			<li><strong>File Size:</strong> {{selectedFile.size}} bytes</li>
-		  </ul>
-		</section>
+<div class="file-info">
+	<!-- Display upload status -->
+	<section [ngSwitch]="uploadStatus">
+		<p *ngSwitchCase="'inProgress'">⏳ Uploading, please wait...</p>
+		<p *ngSwitchCase="'completed'">✅ File uploaded successfully!</p>
+		<p *ngSwitchCase="'error'">❌ An error occurred during upload.</p>
+		<p *ngSwitchDefault>🔄 Ready to upload your file.</p>
+	  </section>
+	</div>
+	<div class="file-div">
+		<input type="file" class="upload-input" (change)="handleFileSelection($event)" #fileInput />
+		<!-- Upload button -->
+		<button id="upload-button" (click)="uploadFile()">Upload</button>
 	</div>
 
-	<div id="blob-div">
-		<ul id="bloblist">
-			<li *ngFor="let blob of blobs" >{{blob}}</li>
-		</ul>
-	</div>
-	</body>
-</html>
-    <!--<body>
-    	<div class ="upload-container">
-    		<h2>Choose a file to upload</h2>
-            <form id = "image-uploader" method="POST" enctype="multipart/form-data">    
-                <div id="file-selection">
-                    <label for="file-button" id="file-label"></label>
-                    <input id="file-button" type="file" name="file"/>
-    		        <button type="submit" id="upload-button" name="upload-button">
-    			        Upload file
-    		        </button>
-                </div>
-    		</form>
-            <ul id="bloblist">
-                <li th:each="blob:${blobs}" th:text="${blob.getName()}" th:value="${blob.getName()}"></li>
-            </ul>
-    	</div>
-    </body>-->
+	<div *ngIf="selectedFile">
+	<!-- Display file details -->
+	<section class="file-details">
+	  <h3>File Details:</h3>
+	  <ul>
+		<li><strong>Filename:</strong> {{selectedFile.name}}</li>
+		<li><strong>File Type:</strong> {{selectedFile.type}}</li>
+		<li><strong>File Size:</strong> {{selectedFile.size}} bytes</li>
+	  </ul>
+	</section>
+</div>
+<div id="blob-div">
+	<ul id="bloblist">
+		<li *ngFor="let blob of blobs" >{{blob}}</li>
+	</ul>
+</div>

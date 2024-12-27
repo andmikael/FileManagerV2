@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [LoginFormComponent, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -22,7 +23,7 @@ export class LoginComponent {
   private apiUrl = environment.apiUrl;
 
   async login(data: JSON) {    
-    this.http.post(`${this.apiUrl}`+'/api/login', data, {headers: {'Access-Control-Allow-Origin': '*'}})
+    this.http.post(`${this.apiUrl}`+'/api/login/', data, {headers: {'Access-Control-Allow-Origin': '*'}})
     .subscribe({
       next: (response) => {
         this.navigateToContainer();

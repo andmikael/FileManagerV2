@@ -12,7 +12,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import com.own.filemanager.backend.service.BlobStorageService;
-import com.own.filemanager.backend.service.FileStorageService;
 
 
 
@@ -20,17 +19,14 @@ import com.own.filemanager.backend.service.FileStorageService;
 @ComponentScan
 public class Main {
 
-    private static FileStorageService file;
     private static BlobStorageService blobService;
 
-    public Main(FileStorageService file, BlobStorageService blobService) {
-        Main.file = file;
+    public Main(BlobStorageService blobService) {
         Main.blobService = blobService;
         
     }
     public static void main(String[] args) throws InterruptedException {
         ApplicationContext context = SpringApplication.run(Main.class, args);
-        file.init();
     }
 
 

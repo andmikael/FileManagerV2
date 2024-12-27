@@ -6,10 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.own.filemanager.backend.service.BlobStorage;
 
 @Controller
+@RequestMapping("/api/login")
 public class LoginController {
     private final BlobStorage blobStorage;
 
@@ -18,7 +20,7 @@ public class LoginController {
         this.blobStorage = blobStorage;
     }
 
-    @PostMapping("/api/login")
+    @PostMapping("/")
     public ResponseEntity<String> handleLogin(@RequestBody String postBody) {
         this.blobStorage.setConnString(postBody);
         if(!this.blobStorage.init()) {

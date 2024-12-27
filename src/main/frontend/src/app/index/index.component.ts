@@ -9,6 +9,7 @@ import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-index',
+  standalone: true,
   imports: [RouterModule, CommonModule],
   templateUrl: './index.component.html',
   styleUrl: './index.component.css'
@@ -32,7 +33,7 @@ export class IndexComponent implements OnInit {
     async getBlobs(): Promise<any> {
       try {
         return lastValueFrom(
-          this.http.get(`${this.apiUrl}`+"/api/index"));
+          this.http.get(`${this.apiUrl}`+"/api/index/"));
       } catch (e) {
         console.log("error while trying to get blobs: " + e);
       }

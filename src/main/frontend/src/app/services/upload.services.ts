@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
 })
 export class UploadService {
   private apiUrl = environment.apiUrl;
-  private uploadUrl = `${this.apiUrl}`+'api/index/uploadfile'; // Replace with your backend URL
+  private uploadUrl = `${this.apiUrl}`+'/api/index/uploadfile';
 
  constructor(private httpClient: HttpClient) {}
 

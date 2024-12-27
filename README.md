@@ -9,4 +9,4 @@ Inside a Blob container you can upload and download files from/to your device
 
 Uses Angularv19 for frontend and Java Spring / Springboot for backend
 
-This is a more polished version of my earlier [Java only project](https://github.com/andmikael/FileManager) with the same name that is also being holsted in Azure.
+This is a more polished version of my earlier [Java only project](https://github.com/andmikael/FileManager) with the same name that is also being hosted in Azure.

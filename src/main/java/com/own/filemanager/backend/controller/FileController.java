@@ -8,10 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -19,30 +19,28 @@ import com.azure.core.http.rest.PagedIterable;
 import com.azure.storage.blob.models.BlobItem;
 import com.google.gson.Gson;
 import com.own.filemanager.backend.service.BlobStorage;
-import com.own.filemanager.backend.service.FileStorage;
-import com.own.filemanager.backend.service.StorageFileNotFoundException;
-
 
 @Controller
+@RequestMapping("/api/index")
 public class FileController {
 
-    private final FileStorage fileStorage;
     private final BlobStorage blobStorage;
     private PagedIterable<BlobItem> listOfBlobs;
     
     @Autowired
-    public FileController(FileStorage fileStorage, BlobStorage blobStorage) {
-        this.fileStorage = fileStorage;
+    public FileController(BlobStorage blobStorage) {
         this.blobStorage = blobStorage;
     }
 
-    @GetMapping(value="/api/index")
+    @GetMapping(value="/")
     public ResponseEntity<?> switchControllers(Model model, RedirectAttributes redirectAttribs){
         if(!this.blobStorage.init()) {
+            System.out.println("unauthorized");
             return new ResponseEntity<>("unauthorized", HttpStatus.UNAUTHORIZED);
         }
 
         if (blobStorage.getCurrentContainerClient() == null) {
+            System.out.println("unauthorized");
             return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
         String containerName = blobStorage.getCurrentContainerClient().getBlobContainerName();
@@ -56,7 +54,7 @@ public class FileController {
         return new ResponseEntity<>(json, HttpStatus.OK);
     }
 
-    @PostMapping(value="/api/index/uploadfile")
+    @PostMapping(value="/uploadfile")
     public ResponseEntity<?> handleFileUpload(@RequestBody MultipartFile file) {
         if(!this.blobStorage.init()) {
             return new ResponseEntity<>("unauthorized", HttpStatus.UNAUTHORIZED);
@@ -78,12 +76,5 @@ public class FileController {
 
     /*
      * TODO: add ability to rename files before upload
-     */
-
-    @ExceptionHandler(StorageFileNotFoundException.class)
-    public ResponseEntity<?>
-    handleStorageFileNotFound(StorageFileNotFoundException exc) {
-        return ResponseEntity.notFound().build();
-    }
-    
+     */ 
 }

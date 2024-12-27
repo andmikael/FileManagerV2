@@ -21,7 +21,6 @@ public class BlobStorageService implements BlobStorage {
     private String urlPrefix = null;
     private BlobServiceClient client = null;
     private BlobContainerClient containerClient = null;
-    private PagedIterable<BlobItem> listOfBlobs;
 
     @Autowired
     public BlobStorageService(BlobProperties properties) {
@@ -100,12 +99,6 @@ public class BlobStorageService implements BlobStorage {
 
     @Override
     public Response<?> deleteContainer(String containerName) {
-        BlobContainerClient currentContainerClient = client.getBlobContainerClient(containerName);
-        if (currentContainerClient.exists()) {
-            System.out.println("container client exists");
-        } else {
-            System.out.println("container doesnt exist");
-        }
         return client.deleteBlobContainerWithResponse(containerName, null);
     }
 
