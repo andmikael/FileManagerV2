@@ -15,11 +15,8 @@ import { FormsModule, NgForm } from '@angular/forms';
   templateUrl: './index.component.html',
   styleUrl: './index.component.css'
 })
-export class IndexComponent implements AfterViewInit {
+export class IndexComponent implements OnInit {
   constructor(private uploadService: UploadService) {
-  }
-  ngAfterViewInit(): void {
-    this.blobs$ = this.http.get(`${environment.apiUrl}`+"/api/index/");
   }
 
   selectedFile: File | null = null; // Allowing 'null' as an initial value
@@ -66,7 +63,6 @@ export class IndexComponent implements AfterViewInit {
   onUploadSubmit(uploadForm: NgForm) {
     this.uploadFile();
     this.fileInput.nativeElement.value = null;
-    //this.ngOnInit();
-    this.ngAfterViewInit();
+    this.ngOnInit();
   }
 }

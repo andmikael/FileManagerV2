@@ -15,7 +15,6 @@
 		<!-- <button type="submit" id="upload-button" (click)="uploadFile()">Upload</button> -->
 		</form>	
 	</div>
-
 	<div *ngIf="selectedFile">
 	<!-- Display file details -->
 	<section class="file-details">
@@ -26,6 +25,11 @@
 		<li><strong>File Size:</strong> {{selectedFile.size}} bytes</li>
 	  </ul>
 	</section>
+	<div class="container-list-text">
+		<h3>
+			Files in this container
+		</h3>
+	 </div>
 </div>
 <div id="blob-div">
 	<ul id="bloblist">

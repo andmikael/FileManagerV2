@@ -12,11 +12,12 @@ h2 {
 }
 
 p {
-  font-size: 20px;
+  font-size: 1.5rem;
 }
 
 li {
-  font-size: 14px;
+  font-size: 0.9rem;
+  list-style: none;
 }
 
 input::file-selector-button {
@@ -25,7 +26,7 @@ input::file-selector-button {
   border: none;
   margin: 0px 10px;
   padding: 10px 25px;
-  font-size: 16px;
+  font-size: 1rem;
   text-transform: uppercase;
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -78,4 +79,20 @@ input::file-selector-button:hover {
   height: 100%;
   justify-content: center;
   align-items: center;
+}
+
+.file-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h3 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    padding: 1.5rem;
 }
