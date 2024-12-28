@@ -12,6 +12,7 @@ public interface BlobStorage {
     Boolean init();
     String getAccountType();
     Boolean getClientState();
+    void logout();
     void setConnString(String connString) throws java.lang.IllegalArgumentException;
     PagedIterable<BlobContainerItem> fetchBlobContainers();
     PagedIterable<BlobContainerItem> getBlobContainers();

@@ -3,8 +3,6 @@ body {
     color: #282828;
     font-family: monospace;
     margin: 1rem auto;
-    display: flex;
-    height: 100%;
 }
 
 button {
@@ -12,16 +10,12 @@ button {
     color: #fff;
     border: none;
     padding: 10px 30px;
-    font-size: 16px;
+    font-size: 1rem;
     text-transform: uppercase;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
  button.hover {
@@ -37,6 +31,12 @@ button {
 }
 
 #trial-button-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h2 {
     display: flex;
     justify-content: center;
     align-items: center;

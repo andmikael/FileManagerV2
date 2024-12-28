@@ -35,10 +35,6 @@ public class BlobStorageService implements BlobStorage {
 
     @Override 
     public Boolean init() {
-        if (client == null && connectionString == null) {
-            return false;
-        }
-
         if (this.connectionString.contains("trial")) {
             try {
                 this.client = new BlobServiceClientBuilder()
@@ -49,20 +45,29 @@ public class BlobStorageService implements BlobStorage {
             } catch(java.lang.IllegalArgumentException e) {
                 return false;
             }
-            return true;
-        }
-        try {
-            this.client = new BlobServiceClientBuilder()
-            .endpoint(System.getenv("AZURE_STORAGE_URL_ENDPOINT"))
-            .connectionString(this.connectionString)
-            .buildClient();
-            this.accountType = "user";
-        } catch(java.lang.IllegalArgumentException e) {
-            return false;
+
+        } else {
+            try {
+                this.client = new BlobServiceClientBuilder()
+                .endpoint(System.getenv("AZURE_STORAGE_URL_ENDPOINT"))
+                .connectionString(this.connectionString)
+                .buildClient();
+                this.accountType = "user";
+            } catch(java.lang.IllegalArgumentException e) {
+                return false;
+            }
         }
 
         listOfBlobContainers = this.fetchBlobContainers();
         return true;
+    }
+
+    @Override
+    public void logout() {
+        this.client = null;
+        this.containerClient = null;
+        this.urlPrefix = null;
+        this.connectionString = null;
     }
 
     @Override

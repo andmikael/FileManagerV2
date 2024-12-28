@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonEngine } from '@angular/ssr/node';
 import { UploadService } from '../services/upload.services';
@@ -15,15 +15,17 @@ import { FormsModule, NgForm } from '@angular/forms';
   templateUrl: './index.component.html',
   styleUrl: './index.component.css'
 })
-export class IndexComponent implements OnInit{
+export class IndexComponent implements AfterViewInit {
   constructor(private uploadService: UploadService) {
+  }
+  ngAfterViewInit(): void {
+    this.blobs$ = this.http.get(`${environment.apiUrl}`+"/api/index/");
   }
 
   selectedFile: File | null = null; // Allowing 'null' as an initial value
   uploadStatus: string = 'waiting';
 
   blobs$: Observable<any> | undefined
-  private apiUrl = environment.apiUrl;
   @ViewChild('fileInput') fileInput!: ElementRef;
 
   http: HttpClient = inject(HttpClient);
@@ -33,7 +35,7 @@ export class IndexComponent implements OnInit{
     // used to initially populate blobs to a list but is also used for refreshing list after uploading
     // a blob. Current problem: GET request finishes too quickly and blob list is not updated with
     // the new blob
-    this.blobs$ = this.http.get(`${this.apiUrl}`+"/api/index/")
+    this.blobs$ = this.http.get(`${environment.apiUrl}`+"/api/index/")
   }
 
   handleFileSelection(event: any) {
@@ -64,6 +66,7 @@ export class IndexComponent implements OnInit{
   onUploadSubmit(uploadForm: NgForm) {
     this.uploadFile();
     this.fileInput.nativeElement.value = null;
-    this.ngOnInit();
+    //this.ngOnInit();
+    this.ngAfterViewInit();
   }
 }

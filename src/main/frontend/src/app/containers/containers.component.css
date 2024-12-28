@@ -1,3 +1,10 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 button {
     background-color: #6200ea;
     color: #fff;
@@ -35,13 +42,14 @@ select {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 92%;
-    font-size: 16px;
-    padding: 15px 15px;
-    margin: 10px 0px;
+    font-size: 1.1rem;
     border: none;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: 2.2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-bottom: 0.75rem;
 }
 
 #dropdown {

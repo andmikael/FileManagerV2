@@ -24,7 +24,6 @@ export class ContainersComponent implements OnInit{
   }
   http: HttpClient = inject(HttpClient);
   router: Router = inject(Router);
-  private apiUrl = environment.apiUrl;
 
   @Output() EmitContainerString: EventEmitter<JSON> = new EventEmitter<JSON>();
 
@@ -39,7 +38,7 @@ export class ContainersComponent implements OnInit{
   async getContainers(): Promise<any> {
     try {
       return lastValueFrom(
-        this.http.get(`${this.apiUrl}`+"/api/containers/"));
+        this.http.get(`${environment.apiUrl}`+"/api/containers/"));
     } catch (e) {
       console.log("error while trying to get containers: " + e);
     }
@@ -60,7 +59,7 @@ export class ContainersComponent implements OnInit{
   }
 
   selectContainer() {  
-      this.http.post(`${this.apiUrl}`+"/api/containers/selectcontainer", this.selectedContainer)
+      this.http.post(`${environment.apiUrl}`+"/api/containers/selectcontainer", this.selectedContainer)
       .subscribe({
         next: (response) => {
           this.navigateToIndex();
@@ -72,24 +71,24 @@ export class ContainersComponent implements OnInit{
     }
 
   deleteContainer() {
-    this.receivedData = this.receivedData.filter(element => element !== this.selectedContainer)
-    this.http.post(`${this.apiUrl}`+"/api/containers/deletecontainer", this.selectedContainer, {responseType: 'text', observe: 'response'})
+    this.http.post(`${environment.apiUrl}`+"/api/containers/deletecontainer", this.selectedContainer, {responseType: 'text', observe: 'response'})
     .subscribe({
       next: (response) => {
+        this.receivedData = this.receivedData.filter(element => element !== this.selectedContainer)
+        if (this.receivedData.length > 0) {
+          this.selectedContainer = this.receivedData[0];
+        } else {
+          this.selectedContainer = "";
+        }
       },
       error: (error) => { 
         console.error("error whilwe deleting container: " + error);
       }
     });
-    if (this.receivedData.length > 0) {
-      this.selectedContainer = this.receivedData[0];
-    } else {
-      this.selectedContainer = "";
-    }
   }
 
   onCreateSubmit(containerForm: NgForm) {
-    this.http.post(`${this.apiUrl}`+"/api/containers/createcontainer", containerForm.value["container-name"], {responseType: 'text', observe: 'response'})
+    this.http.post(`${environment.apiUrl}`+"/api/containers/createcontainer", containerForm.value["container-name"], {responseType: 'text', observe: 'response'})
     .subscribe({
       next: (response) => {
         if (response.status == 201) {

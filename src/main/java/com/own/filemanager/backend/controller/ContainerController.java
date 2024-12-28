@@ -28,11 +28,6 @@ public class ContainerController {
 
     @GetMapping("/")
     public ResponseEntity<?> populateDropDown(){
-        if(!this.blobStorage.init()) {
-            return new ResponseEntity<>("unauthorized", HttpStatus.UNAUTHORIZED);
-        }
-
-
         List<String> containers = new ArrayList<>();
         PagedIterable<BlobContainerItem> foundContainers = blobStorage.getBlobContainers();
         if (foundContainers == null) {
@@ -48,10 +43,6 @@ public class ContainerController {
 
     @PostMapping(value="/selectcontainer")
     public ResponseEntity<?> handleContainerSelection(@RequestBody String postBody) {
-        if(!this.blobStorage.init()) {
-            return new ResponseEntity<>("unauthorized", HttpStatus.UNAUTHORIZED);
-        }
-
         blobStorage.createContainer(postBody);
         blobStorage.setContainerClient(blobStorage.getContainerClient(postBody));
         return new ResponseEntity<>(HttpStatus.OK);
@@ -59,10 +50,6 @@ public class ContainerController {
 
     @PostMapping(value="/deletecontainer")
     public ResponseEntity<?> handleContainerDeletion(@RequestBody String postBody) {
-        if(!this.blobStorage.init()) {
-            return new ResponseEntity<>("unauthorized, ", HttpStatus.UNAUTHORIZED);
-        }
-
         if (this.blobStorage.getAccountType().contains("trial")) {
             return new ResponseEntity<>("No permissions for deleting containers", HttpStatus.FORBIDDEN);
         }
@@ -87,10 +74,6 @@ public class ContainerController {
 
     @PostMapping(value="/createcontainer")
     public ResponseEntity<?> handleContainerCreation(@RequestBody String postBody) {
-        if(!this.blobStorage.init()) {
-            return new ResponseEntity<>("unauthorized", HttpStatus.UNAUTHORIZED);
-        }
-
         if (this.blobStorage.getAccountType().contains("trial")) {
             return new ResponseEntity<>("No permission to create containers", HttpStatus.FORBIDDEN);
         }

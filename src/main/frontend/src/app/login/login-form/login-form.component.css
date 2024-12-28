@@ -3,7 +3,7 @@ button {
     color: #fff;
     border: none;
     padding: 10px 30px;
-    font-size: 16px;
+    font-size: 1rem;
     text-transform: uppercase;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -18,20 +18,26 @@ button {
 }
 
 #cont-name {
-    display: flex;
+    display:flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     flex: 1;
-    font-size: 16px;
+    font-size: 1rem;
     padding: 15px 15px;
     margin: 10px 0px;
     border: none;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 92%;
 }
 
 .button-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#login-form {
     display: flex;
     justify-content: center;
     align-items: center;

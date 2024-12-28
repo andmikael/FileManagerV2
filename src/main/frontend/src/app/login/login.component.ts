@@ -20,12 +20,11 @@ export class LoginComponent {
   router: Router = inject(Router);
   containers: any
 
-  private apiUrl = environment.apiUrl;
-
   async login(data: JSON) {    
-    this.http.post(`${this.apiUrl}`+'/api/login/', data, {headers: {'Access-Control-Allow-Origin': '*'}})
+    this.http.post(`${environment.apiUrl}`+'/api/auth/login', data, {headers: {'Access-Control-Allow-Origin': '*'}})
     .subscribe({
       next: (response) => {
+        localStorage.setItem('isLoggedIn', '1');
         this.navigateToContainer();
       },
       error: (error) => { 
@@ -41,9 +40,10 @@ export class LoginComponent {
   }
 
   selectTrialAccount() {
-    this.http.post(`${this.apiUrl}`+'/api/login/', "trial", {headers: {'Access-Control-Allow-Origin': '*'}})
+    this.http.post(`${environment.apiUrl}`+'/api/auth/login', "trial", {headers: {'Access-Control-Allow-Origin': '*'}})
     .subscribe({
       next: (response) => {
+        localStorage.setItem('isLoggedIn', '1');
         this.navigateToContainer();
       },
       error: (error) => { 

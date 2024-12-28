@@ -1,0 +1,8 @@
+<ng-container *ngTemplateOutlet="navbar"/>
+    <ng-template #navbar>
+        <div class = "nav-contaner">
+            <nav class ="page-nav">
+                <a id="logout-button" routerLink="/" (click)="logout()">LOGOUT</a>
+            </nav>
+        </div>
+    </ng-template>
