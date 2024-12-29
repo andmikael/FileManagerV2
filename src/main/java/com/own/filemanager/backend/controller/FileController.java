@@ -1,8 +1,11 @@
 package com.own.filemanager.backend.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,16 +33,19 @@ public class FileController {
 
     @GetMapping(value="/")
     public ResponseEntity<?> switchControllers() {
-        String containerName = blobStorage.getCurrentContainerClient().getBlobContainerName();
+        Map<String, List<String>> blobs = new HashMap<>();
         this.listOfBlobs = blobStorage.getBlobs();
         List<String> allBlobs = new ArrayList<>();
         for (BlobItem elem : this.listOfBlobs) {
             allBlobs.add(elem.getName());
         }
-        allBlobs.add(containerName);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
         Gson gson = new Gson();
-        String json = gson.toJson(allBlobs);
-        return new ResponseEntity<>(json, HttpStatus.OK);
+        blobs.put("blobs", allBlobs);
+        String json = gson.toJson(blobs);
+        return new ResponseEntity<>(json, headers, HttpStatus.OK);
     }
 
     @PostMapping(value="/uploadfile")

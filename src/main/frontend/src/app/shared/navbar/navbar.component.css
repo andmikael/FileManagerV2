@@ -12,10 +12,7 @@
     padding: 15px;
 }
 
-#logout-button {
-    display: block;
-    justify-content: flex-end;
-    max-width: fit-content; 
+button { 
     border: 2px solid;
     align-content: center;
     font-size: 1rem;

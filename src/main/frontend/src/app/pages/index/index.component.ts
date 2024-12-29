@@ -4,9 +4,10 @@ import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from 
 import { Router, RouterModule } from '@angular/router';
 import { CommonEngine } from '@angular/ssr/node';
 import { UploadService } from '../../services/upload.services';
-import { lastValueFrom, Observable, of } from 'rxjs';
+import { lastValueFrom, map, Observable, of, take, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { FormsModule, NgForm } from '@angular/forms';
+import { BlobService } from '../../services/blob.service';
 
 @Component({
   selector: 'app-index',
@@ -15,25 +16,23 @@ import { FormsModule, NgForm } from '@angular/forms';
   templateUrl: './index.component.html',
   styleUrl: './index.component.css'
 })
-export class IndexComponent implements OnInit {
-  constructor(private uploadService: UploadService) {
+export class IndexComponent {
+  blobs$: any;
+
+  constructor(private uploadService: UploadService,
+    private readonly blobService: BlobService
+  ) {
+    this.blobs$ = this.blobService.blobs$;
+    this.loadBlobs();
   }
 
-  selectedFile: File | null = null; // Allowing 'null' as an initial value
-  uploadStatus: string = 'waiting';
-
-  blobs$: Observable<any> | undefined
   @ViewChild('fileInput') fileInput!: ElementRef;
+
+  selectedFile: File | null = null;
+  uploadStatus: string = 'waiting';
 
   http: HttpClient = inject(HttpClient);
   router: Router = inject(Router);
-
-  ngOnInit(): void {
-    // used to initially populate blobs to a list but is also used for refreshing list after uploading
-    // a blob. Current problem: GET request finishes too quickly and blob list is not updated with
-    // the new blob
-    this.blobs$ = this.http.get(`${environment.apiUrl}`+"/api/index/")
-  }
 
   handleFileSelection(event: any) {
     this.selectedFile = event.target.files[0];
@@ -63,6 +62,12 @@ export class IndexComponent implements OnInit {
   onUploadSubmit(uploadForm: NgForm) {
     this.uploadFile();
     this.fileInput.nativeElement.value = null;
-    this.ngOnInit();
   }
+
+    loadBlobs() {
+      this.blobService
+      .getBlobs().pipe(
+        take(1),
+        tap((blob) => {}),).subscribe();
+    }
 }

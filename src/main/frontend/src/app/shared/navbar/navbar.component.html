@@ -1,8 +1,15 @@
-<ng-container *ngTemplateOutlet="navbar"/>
-    <ng-template #navbar>
+<ng-container *ngTemplateOutlet="navbar; context: { user: user$ | async }"/>
+    <ng-template #navbar let-user="user">
         <div class = "nav-contaner">
             <nav class ="page-nav">
-                <a id="logout-button" routerLink="/" (click)="logout()">LOGOUT</a>
+                <div class ="nav-button">
+                    @if (user) {
+                        <button (click)="logout()">LOGOUT</button>
+                    } @else {
+                        <button (click)="login()">LOGIN</button>
+                    }
+                </div>
+                <!--<a id="logout-button" routerLink="/" (click)="logout()">LOGOUT</a>-->
             </nav>
         </div>
     </ng-template>

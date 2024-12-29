@@ -13,7 +13,7 @@ interface ContainerList {
 })
 
 export class ContainerService {
-    readonly containers$: BehaviorSubject<any|null> = new BehaviorSubject<any|null>(null);
+    readonly containers$: BehaviorSubject<any|null> = new BehaviorSubject<any|null>([]);
 
     constructor(
         private http: HttpClient

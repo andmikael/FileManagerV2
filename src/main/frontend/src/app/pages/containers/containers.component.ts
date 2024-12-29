@@ -7,6 +7,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BehaviorSubject, catchError, first, firstValueFrom, fromEvent, lastValueFrom, map, Observable, take, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ContainerService } from '../../services/container.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-containers',
@@ -26,6 +27,7 @@ export class ContainersComponent {
 
   constructor(private route: ActivatedRoute,
     private readonly containerService: ContainerService,
+    private readonly userService: UserService
   ) {
     this.receivedData$ = this.containerService.containers$;
     this.populateList();

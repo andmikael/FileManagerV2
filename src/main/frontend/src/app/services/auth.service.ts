@@ -17,4 +17,8 @@ export class AuthService {
         localStorage.removeItem('isLoggedIn');
         return this.http.post<void>(`${environment.apiUrl}`+'/api/auth/logout', {})
     }
+
+    login() {
+        
+    }
 }
