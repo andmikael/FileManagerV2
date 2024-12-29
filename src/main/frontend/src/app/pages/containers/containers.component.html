@@ -2,16 +2,17 @@
 	<h2 id = "welcome">Manage an existing container</h2>
     <form id ="container-selector" method="POST" enctype="text/plain">    
 		<div>
-			<select id = "dropdown" name="container-name" [(ngModel)]="selectedContainer">
-				<option *ngFor="let container of receivedData" >{{container}}</option>
-			</select>
-			<br><br>
-			<button type="submit" id="select-button" name="select-button" (click)="selectContainer()">
-				Select container
-			</button>
-			<button type="submit" id="delete-button" name="delete-button" (click)="deleteContainer()">
-				Delete container
-			</button>
+			<div class ="container-list">
+				<select id = "dropdown" name="container-name" [(ngModel)]="selectedContainer">
+					<option *ngFor="let container of receivedData$ | async" >{{container}}</option>
+				</select>
+			</div>
+				<button type="submit" id="select-button" name="select-button" (click)="selectContainer()">
+					Select container
+				</button>
+				<button type="submit" id="delete-button" name="delete-button" (click)="deleteContainer()">
+					Delete container
+				</button>
 		</div>
 	</form>	
 	<h2 id="create-message">Or create a new one</h2>

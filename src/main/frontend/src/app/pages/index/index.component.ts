@@ -3,9 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonEngine } from '@angular/ssr/node';
-import { UploadService } from '../services/upload.services';
+import { UploadService } from '../../services/upload.services';
 import { lastValueFrom, Observable, of } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({

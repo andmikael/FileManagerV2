@@ -1,8 +1,10 @@
 package com.own.filemanager.backend.controller;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,17 +30,21 @@ public class ContainerController {
 
     @GetMapping("/")
     public ResponseEntity<?> populateDropDown(){
-        List<String> containers = new ArrayList<>();
+        Map<String, ArrayList<String>> containers = new HashMap<>();
         PagedIterable<BlobContainerItem> foundContainers = blobStorage.getBlobContainers();
         if (foundContainers == null) {
             return new ResponseEntity<>("", HttpStatus.OK);
         }
+        ArrayList<String> listOfContainers = new ArrayList<>();
         for (BlobContainerItem elem : foundContainers) {
-            containers.add(elem.getName());  
+            listOfContainers.add(elem.getName());
         }
+        containers.put("containers", listOfContainers);
         Gson gson = new Gson();
         String json = gson.toJson(containers);
-        return new ResponseEntity<>(json, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        return new ResponseEntity<>(json, headers, HttpStatus.OK);
     }
 
     @PostMapping(value="/selectcontainer")

@@ -36,6 +36,7 @@ select {
     padding: 10px 25px;
     border-radius: 5px;
     font-size: 1rem;
+    margin: 1rem 0px;
 }
 
 #cont-name {
