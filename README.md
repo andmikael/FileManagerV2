@@ -2,7 +2,9 @@
 
 [preview version hosted in Azure](https://gentle-plant-08ad8f103.4.azurestaticapps.net)
 
-A webapp to manage Microsoft Azure Blob Storage containers and blobs
+### Filemanager utilizes Angular v19, Azure SDK, Azure CD with Github Actions, Spring Security, Springboot and Spring frameworks
+
+<br/>
 
 > What does it do?
 
