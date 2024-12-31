@@ -29,6 +29,7 @@ export class ContainersComponent {
     private readonly containerService: ContainerService,
     private readonly userService: UserService
   ) {
+    this.userService.getUser()
     this.receivedData$ = this.containerService.containers$;
     this.populateList();
   }
@@ -80,7 +81,7 @@ export class ContainersComponent {
   }
 
   deleteContainer() {
-    this.http.post(`${environment.apiUrl}`+"/api/containers/deletecontainer", this.selectedContainer, {responseType: 'text', observe: 'response'})
+    this.http.post(`${environment.apiUrl}`+"/api/containers/deletecontainer", this.selectedContainer, { observe: 'response'})
     .subscribe({
       next: (response) => {
         this.populateList();
@@ -92,7 +93,7 @@ export class ContainersComponent {
   }
 
   onCreateSubmit(containerForm: NgForm) {
-    this.http.post(`${environment.apiUrl}`+"/api/containers/createcontainer", containerForm.value["container-name"], {responseType: 'text', observe: 'response'})
+    this.http.post(`${environment.apiUrl}`+"/api/containers/createcontainer", containerForm.value["container-name"], { observe: 'response'})
     .subscribe({
       next: (response) => {
         if (response.status == 201) {

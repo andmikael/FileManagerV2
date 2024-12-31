@@ -26,7 +26,7 @@ export class NavbarComponent {
     private readonly userService: UserService
   ) {
     this.user$ = this.userService.user$
-    this.loadUser();
+    //this.loadUser();
   }
 
   logout(): void {
@@ -42,13 +42,11 @@ export class NavbarComponent {
     }
   }
 
-  loadUser() {
+  /*loadUser() {
     this.userService
     .getUser().pipe(
       take(1),
-      tap(() => {
-        localStorage.setItem('isLoggedIn', '1')
-      }
+      tap(() => {}
     ),).subscribe();
-  }
+  }*/
 }

@@ -3,7 +3,7 @@ package com.own.filemanager.backend.service;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.azure.core.http.rest.PagedIterable;
@@ -15,6 +15,7 @@ import com.azure.storage.blob.BlobServiceClientBuilder;
 import com.azure.storage.blob.models.BlobContainerItem;
 import com.azure.storage.blob.models.BlobItem;
 
+@SessionScope()
 public class BlobStorageService implements BlobStorage {
     private PagedIterable<BlobContainerItem> listOfBlobContainers;
     private String connectionString = null;
@@ -22,8 +23,7 @@ public class BlobStorageService implements BlobStorage {
     private String urlPrefix = null;
     private BlobServiceClient client = null;
     private BlobContainerClient containerClient = null;
-
-    @Autowired
+    
     public BlobStorageService(BlobProperties properties) {
         this.connectionString = properties.getConnectionStr();
     }
@@ -54,6 +54,35 @@ public class BlobStorageService implements BlobStorage {
                 .buildClient();
                 this.accountType = "user";
             } catch(java.lang.IllegalArgumentException e) {
+                return false;
+            }
+        }
+
+        listOfBlobContainers = this.fetchBlobContainers();
+        return true;
+    }
+
+    @Override
+    public Boolean init(String connString) {
+        System.out.println(connString);
+        if (connString.contains("trial")) {
+            try {
+                this.client = new BlobServiceClientBuilder()
+                .endpoint(System.getenv("AZURE_TRIAL_STORAGE_ENDPOINT"))
+                .connectionString(System.getenv("TRIAL_CONN_STRING"))
+                .buildClient();
+                this.accountType = "trial";
+            } catch(java.lang.IllegalArgumentException e) {
+                return false;
+            }
+        } else {
+            try {
+                this.client = new BlobServiceClientBuilder()
+                .endpoint(System.getenv("AZURE_STORAGE_URL_ENDPOINT"))
+                .connectionString(connString)
+                .buildClient();
+                this.accountType = "user";
+            } catch(Exception e) {
                 return false;
             }
         }

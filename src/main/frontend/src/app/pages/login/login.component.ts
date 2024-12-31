@@ -14,14 +14,20 @@ import { environment } from '../../../environments/environment';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+  constructor() {}
   showError: boolean = false;
   errorMessage: string = '';
   http: HttpClient = inject(HttpClient);
   router: Router = inject(Router);
   containers: any
 
-  async login(data: JSON) {    
-    this.http.post(`${environment.apiUrl}`+'/api/auth/login', data, {headers: {'Access-Control-Allow-Origin': '*'}})
+  login(data: JSON) {
+  let authorizationData = 'Basic ' + btoa(data + "");
+  const headers = new HttpHeaders({
+    'Authorization': authorizationData
+  , 'UserRole' : 'user'})
+
+    this.http.post(`${environment.apiUrl}`+'/api/auth/', null, {headers: headers})
     .subscribe({
       next: (response) => {
         localStorage.setItem('isLoggedIn', '1');
@@ -40,7 +46,7 @@ export class LoginComponent {
   }
 
   selectTrialAccount() {
-    this.http.post(`${environment.apiUrl}`+'/api/auth/login', "trial", {headers: {'Access-Control-Allow-Origin': '*'}})
+    this.http.post(`${environment.apiUrl}`+'/api/auth/login', "trial")
     .subscribe({
       next: (response) => {
         localStorage.setItem('isLoggedIn', '1');

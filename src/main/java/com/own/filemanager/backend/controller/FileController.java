@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.azure.core.http.rest.PagedIterable;
@@ -21,7 +21,8 @@ import com.google.gson.Gson;
 import com.own.filemanager.backend.service.BlobStorage;
 
 @Controller
-@RequestMapping("/api/index")
+@SessionScope
+@RequestMapping("/api/index/login")
 public class FileController {
 
     private final BlobStorage blobStorage;
@@ -40,12 +41,13 @@ public class FileController {
             allBlobs.add(elem.getName());
         }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
+        //HttpHeaders headers = new HttpHeaders();
+        //headers.set("Content-Type", "application/json");
         Gson gson = new Gson();
         blobs.put("blobs", allBlobs);
         String json = gson.toJson(blobs);
-        return new ResponseEntity<>(json, headers, HttpStatus.OK);
+        //return new ResponseEntity<>(json, headers, HttpStatus.OK);
+        return new ResponseEntity<>(json, HttpStatus.OK);
     }
 
     @PostMapping(value="/uploadfile")

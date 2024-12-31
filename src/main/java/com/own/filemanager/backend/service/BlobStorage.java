@@ -10,6 +10,7 @@ import com.azure.storage.blob.models.BlobItem;
 
 public interface BlobStorage {
     Boolean init();
+    Boolean init(String type);
     String getAccountType();
     Boolean getClientState();
     void logout();

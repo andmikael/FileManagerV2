@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.annotation.SessionScope;
 
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
@@ -20,6 +21,8 @@ import com.nimbusds.jose.shaded.gson.Gson;
 import com.own.filemanager.backend.service.BlobStorage;
 
 @Controller
+@SessionScope
+@CrossOrigin("*")
 @RequestMapping("/api/containers")
 public class ContainerController {
     private final BlobStorage blobStorage;
@@ -42,9 +45,10 @@ public class ContainerController {
         containers.put("containers", listOfContainers);
         Gson gson = new Gson();
         String json = gson.toJson(containers);
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
-        return new ResponseEntity<>(json, headers, HttpStatus.OK);
+        //HttpHeaders headers = new HttpHeaders();
+        //headers.set("Content-Type", "application/json");
+        //return new ResponseEntity<>(json, headers, HttpStatus.OK);
+        return new ResponseEntity<>(json, HttpStatus.OK);
     }
 
     @PostMapping(value="/selectcontainer")

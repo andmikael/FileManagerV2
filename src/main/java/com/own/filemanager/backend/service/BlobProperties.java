@@ -16,7 +16,7 @@ public class BlobProperties {
         this.connectionStr = connString;
     }
 
-    public String getUrlPrefix() {
+    /*public String getUrlPrefix() {
         return this.endpointString;
     }
 
@@ -26,5 +26,5 @@ public class BlobProperties {
         } else {
             this.endpointString = System.getenv("AZURE_STORAGE_URL_ENDPOINT");
         }
-    }
+    }*/
 }
