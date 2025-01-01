@@ -49,7 +49,9 @@ public class SecurityConfig {
         http
         .csrf(c -> c.disable())
         .cors((CorsConfigurer<HttpSecurity> c) -> c.configurationSource(corsConfigurationSource()))
-        .authorizeHttpRequests(r -> r.anyRequest().authenticated())
+        .authorizeHttpRequests(r -> r.requestMatchers("/api/auth/**","/", "/index.html").permitAll()
+        .anyRequest().authenticated())
+        
         .sessionManagement(c->c.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
         .addFilterAfter(blobAuthenticationFilter, BasicAuthenticationFilter.class);
         return http.build();

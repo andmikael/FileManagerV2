@@ -25,8 +25,8 @@ export class UserService {
       }
 
     getUser() {
-        return this.http.get<ApiUser>(`${environment.apiUrl}/api/auth/login`).pipe(
-            tap((user) => this.setUser(user)))
+        return this.http.get<any>(`${environment.apiUrl}/api/auth/user`).pipe(
+           tap((user) => this.setUser(user)))
     }
 
     clearUser() {

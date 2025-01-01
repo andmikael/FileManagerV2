@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,8 +36,14 @@ public class LoginController {
         //HttpHeaders headers = new HttpHeaders();
         //headers.set("Content-Type", "application/json");
         Gson gson = new Gson();
+        Map<String, String> user = new HashMap<>();
 
-        if (blobStorage.getAccountType() == null) {
+
+        String json = gson.toJson(user);
+
+        return new ResponseEntity<>("", HttpStatus.OK);
+
+        /*if (blobStorage.getAccountType() == null) {
             Map<String, String> user = new HashMap<>();
             user.put("accounType","none");
             String json = gson.toJson(user);
@@ -55,6 +63,8 @@ public class LoginController {
         String json = gson.toJson(user);
         //return new ResponseEntity<>(json, headers, HttpStatus.OK);
         return new ResponseEntity<>(json, HttpStatus.OK);
+    */
+
     }
 
     @PostMapping("/")
@@ -89,6 +99,19 @@ public class LoginController {
     public ResponseEntity<?> handleLogout() {
         this.blobStorage.logout();
         return new ResponseEntity<>("", HttpStatus.OK);
+    }
+
+    
+    @GetMapping("/user")
+    public ResponseEntity<?> getUser(@AuthenticationPrincipal UserDetails userDetails) {
+        Gson gson = new Gson();
+        Map<String, String> user = new HashMap<>();
+        if (userDetails.getAuthorities() == null) {
+            user.put("role", "none");
+        }
+        user.put("role", userDetails.getAuthorities().iterator().next().toString());
+        String json = gson.toJson(user);
+        return new ResponseEntity<>(json, HttpStatus.OK);
     }
 
     public static HttpSession resetSessionId() {
