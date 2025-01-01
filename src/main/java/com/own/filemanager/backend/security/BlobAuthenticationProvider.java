@@ -23,18 +23,14 @@ public class BlobAuthenticationProvider implements AuthenticationProvider {
         BlobAuthentication blobAuthentication = (BlobAuthentication) authentication;
         String headerKey = blobAuthentication.getConnString();
         String userRole = blobAuthentication.getUserRole();
-        if (headerKey == null) {
-            System.out.println("header key is null");
-        }
 
         if (!this.blobStorage.init(headerKey) || headerKey == null) {
             throw new BadCredentialsException("auth error: wrong conn string");
         }
-        System.out.println("authentication successful");
+
         blobAuthentication.setAuthenticated(true);
         blobAuthentication.setUserPrincipal(new UserPrincipal(new User(userRole)));
         return blobAuthentication;
-        //return new BlobAuthentication(true, headerKey, userRole, new UserPrincipal(new User(userRole)));
     }
 
     @Override

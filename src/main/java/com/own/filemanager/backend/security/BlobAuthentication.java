@@ -36,6 +36,7 @@ public class BlobAuthentication implements Authentication {
         this.userPrincipal = null;
     }
 
+    // USE WHEN REMOVING LOMBOK GETTERS AND SETTERS AND ALLARGSCONTRUCTOR
     /*public BlobAuthentication(Boolean authentication, String key) {
         this.authentication = authentication;
         this.connString = key;

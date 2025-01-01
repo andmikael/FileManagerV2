@@ -7,8 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -23,6 +25,10 @@ import lombok.AllArgsConstructor;
 public class SecurityConfig {
     private final BlobAuthenticationFilter blobAuthenticationFilter;
 
+    @Bean HttpSessionSecurityContextRepository securityContextRepository() {
+        return new HttpSessionSecurityContextRepository();
+    }
+
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -35,6 +41,8 @@ public class SecurityConfig {
         return source;
     }
 
+    // custom security filter rules for authentication
+    // uses custom made OncePerRequest filter for authorization
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -42,27 +50,8 @@ public class SecurityConfig {
         .csrf(c -> c.disable())
         .cors((CorsConfigurer<HttpSecurity> c) -> c.configurationSource(corsConfigurationSource()))
         .authorizeHttpRequests(r -> r.anyRequest().authenticated())
-        //.formLogin(form -> form.loginPage("/api/auth/").permitAll())
-
-        // -------------------------
-
-        // IMPORTANT: FIX AUTHENTICATION BEING DONE TWICE AND SESSION NOT BEING CREATED
-
-        // ----------------------------
+        .sessionManagement(c->c.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
         .addFilterAfter(blobAuthenticationFilter, BasicAuthenticationFilter.class);
         return http.build();
     }
 }
-
-        /*SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
-        //storing the session
-        http.securityContext((context) -> context.securityContextRepository(securityContextRepository));
-
-        //session management
-        http.sessionManagement((session) -> {
-                session.maximumSessions(1).maxSessionsPreventsLogin(true);
-                session.sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::newSession);
-                session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
-             }
-        
-        );*/

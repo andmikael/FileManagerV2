@@ -3,8 +3,6 @@ package com.own.filemanager.backend.security;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.Collections;
-import java.util.Enumeration;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,38 +13,34 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+
 
 @Component
+@RequiredArgsConstructor
 public class BlobAuthenticationFilter extends OncePerRequestFilter {
     private final BlobAuthenticationManager blobAuthenticationManager;
 
-    public BlobAuthenticationFilter(BlobAuthenticationManager blobAuthenticationManager) {
-        this.blobAuthenticationManager = blobAuthenticationManager;
-    }
-
+    // Custom security filter that checks whether the request has the correct authorization header (custom beaerer token that is only sent once)
+    // if token is correct, a new session ID will be created user is remembered until they log out
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println(request.getRequestURL());
-        String headerKey = request.getHeader("Authorization");
-        String userRole = request.getHeader("UserRole");
-
-        Enumeration<String> e = request.getHeaderNames();
-        for (String elem : Collections.list(e)) {
-            System.out.println(elem);
+        if (request.getHeader("Cookie") == null) {
+            String headerKey = request.getHeader("Authorization");
+            String userRole = request.getHeader("UserRole");
+    
+            String authKey = new String();
+            if (headerKey != null) {
+                String[] key = headerKey.split(" ");
+                authKey = key[1].replaceAll("\\s+","");
+            }
+            String decodedString = new String(Base64.getDecoder().decode(authKey), StandardCharsets.UTF_8);
+            BlobAuthentication blobAuthentication = new BlobAuthentication(false, decodedString, userRole);
+            Authentication authObj = blobAuthenticationManager.authenticate(blobAuthentication);
+            if (authObj.isAuthenticated()) {
+                SecurityContextHolder.getContext().setAuthentication(authObj);
+            }
         }
-
-        System.out.println(headerKey);
-        System.out.println(userRole);
-
-        String authKey = new String();
-        if (headerKey != null) {
-            String[] key = headerKey.split(" ");
-            authKey = key[1].replaceAll("\\s+","");
-        }
-        String decodedString = new String(Base64.getDecoder().decode(authKey), StandardCharsets.UTF_8);
-        BlobAuthentication blobAuthentication = new BlobAuthentication(false, decodedString, userRole);
-        Authentication authObj = blobAuthenticationManager.authenticate(blobAuthentication);
-        SecurityContextHolder.getContext().setAuthentication(authObj);
         filterChain.doFilter(request, response);
     }
     

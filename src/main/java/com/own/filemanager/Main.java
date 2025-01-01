@@ -21,5 +21,9 @@ public class Main {
     }
     public static void main(String[] args) throws InterruptedException {
         ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
+        //String[] beans = context.getBeanFactory().getBeanDefinitionNames();
+        //for (String elem : beans) {
+        //    System.out.println(elem);
+        //}
     }
 };
