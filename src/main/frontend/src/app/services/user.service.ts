@@ -20,7 +20,9 @@ export class UserService {
     ) {}
 
     setUser(user: ApiUser | null): void {
-        this.user$.next(user);
+        if (!user == null) {
+            this.user$.next(user);
+        }
         console.log(this.user$.getValue());
       }
 

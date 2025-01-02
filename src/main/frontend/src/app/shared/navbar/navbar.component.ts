@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Injectable } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Injectable, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -16,7 +16,7 @@ import { UserService } from '../../services/user.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   http: HttpClient = inject(HttpClient);
   router: Router = inject(Router);
   user$: any
@@ -26,15 +26,16 @@ export class NavbarComponent {
     private readonly userService: UserService
   ) {
     this.user$ = this.userService.user$
-    this.loadUser();
+  }
 
+  ngOnInit(): void {
+      this.loadUser();
   }
 
   logout(): void {
     this.authService.logout().pipe(take(1)).subscribe();
     this.userService.clearUser();
     this.router.navigate(['/']);
-
   }
 
   login() {

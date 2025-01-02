@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +24,6 @@ import com.own.filemanager.backend.service.BlobStorage;
 
 @Controller
 @SessionScope
-@CrossOrigin("*")
 @RequestMapping("/api/containers")
 public class ContainerController {
     private final BlobStorage blobStorage;
@@ -33,6 +34,8 @@ public class ContainerController {
 
     @GetMapping("/")
     public ResponseEntity<?> populateDropDown(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(auth);
         Map<String, ArrayList<String>> containers = new HashMap<>();
         PagedIterable<BlobContainerItem> foundContainers = blobStorage.getBlobContainers();
         if (foundContainers == null) {
@@ -40,6 +43,7 @@ public class ContainerController {
         }
         ArrayList<String> listOfContainers = new ArrayList<>();
         for (BlobContainerItem elem : foundContainers) {
+            System.out.println(elem.getName());
             listOfContainers.add(elem.getName());
         }
         containers.put("containers", listOfContainers);

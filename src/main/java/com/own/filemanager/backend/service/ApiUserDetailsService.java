@@ -15,14 +15,14 @@ public class ApiUserDetailsService implements UserDetailsService {
 
     public ApiUserDetailsService(BlobStorage blobStorage) {
         this.blobStorage = blobStorage;
-        System.out.println("test");
+
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         this.blobStorage.setConnString(username);
         if(!this.blobStorage.init()) {
-            throw new UsernameNotFoundException("connection string not valid"); 
+            throw new UsernameNotFoundException("Could not find account with matching connection string"); 
         }
         return new UserPrincipal(new User(username));
     }

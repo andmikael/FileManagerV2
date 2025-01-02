@@ -6,7 +6,8 @@ import { CookieService } from '../services/cookies';
 
 export function credentialsInterceptor(
   req: HttpRequest<unknown>,
-  next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
+  next: HttpHandlerFn,
+): Observable<HttpEvent<unknown>> {
   const platformId = inject(PLATFORM_ID);
   const cookieService = inject(CookieService);
   const isBrowser = isPlatformBrowser(platformId);

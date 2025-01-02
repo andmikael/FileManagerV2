@@ -1,12 +1,18 @@
 package com.own.filemanager.backend.controller;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +32,7 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/api/auth")
 public class LoginController {
     private final BlobStorage blobStorage;
+    //private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
     public LoginController(BlobStorage blobStorage) {
         this.blobStorage = blobStorage;
@@ -100,25 +107,19 @@ public class LoginController {
         this.blobStorage.logout();
         return new ResponseEntity<>("", HttpStatus.OK);
     }
-
     
     @GetMapping("/user")
-    public ResponseEntity<?> getUser(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(auth);
         Gson gson = new Gson();
         Map<String, String> user = new HashMap<>();
-        if (userDetails.getAuthorities() == null) {
+        if (auth == null || auth.getAuthorities().iterator().next().toString().equals("ROLE_ANONYMOUS")) {
             user.put("role", "none");
+        } else {
+            user.put("role", auth.getAuthorities().iterator().next().toString());
         }
-        user.put("role", userDetails.getAuthorities().iterator().next().toString());
         String json = gson.toJson(user);
         return new ResponseEntity<>(json, HttpStatus.OK);
     }
-
-    public static HttpSession resetSessionId() {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        HttpSession session = request.getSession(false); 
-        session.invalidate();
-        session = request.getSession(true);
-        return session;
-}
 }

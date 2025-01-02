@@ -60,4 +60,17 @@ export class LoginComponent {
       }
     });
   }
+
+  getTest() {
+    this.http.get(`${environment.apiUrl}`+'/api/auth/')
+    .subscribe({
+      next: (response) => {
+      },
+      error: (error) => { 
+        console.error(error);
+        this.showError = true;
+        this.errorMessage = 'was unable to login to trial account'; 
+      }
+    });
+  }
 }

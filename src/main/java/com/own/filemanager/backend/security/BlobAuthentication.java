@@ -21,15 +21,12 @@ public class BlobAuthentication implements Authentication {
     private String connString;
     private String userRole;
     private UserPrincipal userPrincipal;
-    public static int initiationTimes = 0;
 
     public BlobAuthentication() {
         
     }
 
     public BlobAuthentication(boolean authentication, String connString, String userRole) {
-        BlobAuthentication.initiationTimes++;
-        System.out.println("number of times Blobauthentication was initiated: " + initiationTimes);
         this.authentication = authentication;
         this.connString = connString;
         this.userRole = userRole;
@@ -60,7 +57,7 @@ public class BlobAuthentication implements Authentication {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.userPrincipal.getAuthorities();
     }
 
     @Override

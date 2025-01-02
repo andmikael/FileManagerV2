@@ -1,5 +1,6 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { APP_BASE_HREF } from "@angular/common";
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
@@ -12,5 +13,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withFetch(), withInterceptors([credentialsInterceptor])
     ),
+    { provide: APP_BASE_HREF, useValue: '/' }
   ]
 };
