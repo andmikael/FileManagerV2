@@ -2,6 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID, inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 
+// check if user is logged in 
 export const authGuard: CanActivateFn = (): boolean => {
   const router = inject(Router);
   const platformId = inject(PLATFORM_ID);

@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("blob")
 public class BlobProperties {
     private String connectionStr = null;
+    @SuppressWarnings("unused")
     private String endpointString = null;
     
 

@@ -1,11 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Injectable, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../../services/auth.service';
-import { take, tap } from 'rxjs';
 import { UserService } from '../../services/user.service';
+import { map, take, tap } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -16,26 +14,22 @@ import { UserService } from '../../services/user.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class NavbarComponent implements OnInit {
-  http: HttpClient = inject(HttpClient);
-  router: Router = inject(Router);
-  user$: any
+export class NavbarComponent {
+  user$ = this.userService.user$
+
+  readonly isLoggedIn$ = this.user$.pipe(map((user) => !!user));
 
   constructor(
-    private readonly authService: AuthService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly router: Router
   ) {
-    this.user$ = this.userService.user$
-  }
-
-  ngOnInit(): void {
-      this.loadUser();
+    this.loadUser();
   }
 
   logout(): void {
-    this.authService.logout().pipe(take(1)).subscribe();
+    /*this.authService.logout().pipe(take(1)).subscribe();
     this.userService.clearUser();
-    this.router.navigate(['/']);
+    this.router.navigate(['/']);*/
   }
 
   login() {
@@ -44,11 +38,15 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  loadUser() {
+  loadUser()  {
     this.userService
-    .getUser().pipe(
-      take(1),
-      tap(() => {}
-    ),).subscribe();
+    .getUser()
+      .pipe(
+        take(1),
+        tap(() => {
+            localStorage.setItem('isLoggedIn', '1');
+          }),
+      )
+      .subscribe();
   }
 }

@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, tap } from "rxjs";
-import { ApiUser } from "../models/api.model";
-import { HttpClient } from "@angular/common/http";
+import { BehaviorSubject, catchError, take, tap } from "rxjs";
+import { ApiError, ApiUser } from "../models/api.model";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "../../environments/environment";
-import { AuthService } from "./auth.service";
+import { Router } from "@angular/router";
+import { ErrorHandlerService } from "./error.handler.service";
 
 @Injectable({
     providedIn: 'root',
@@ -15,23 +16,33 @@ export class UserService {
     new BehaviorSubject<ApiUser | null>(null);
 
     
-    constructor(private readonly authService: AuthService,
+    constructor(
         private http: HttpClient,
+        private router: Router,
+        private errorHandlingService: ErrorHandlerService
     ) {}
 
     setUser(user: ApiUser | null): void {
-        if (!user == null) {
-            this.user$.next(user);
-        }
-        console.log(this.user$.getValue());
+        this.user$.next(user)
       }
 
     getUser() {
-        return this.http.get<any>(`${environment.apiUrl}/api/auth/user`).pipe(
-           tap((user) => this.setUser(user)))
+        return this.http.get<ApiUser>(`${environment.apiUrl}/api/auth/user`).pipe(take(1),
+           tap((user) => this.setUser(user)),
+           catchError((e) => this.errorHandlingService.handleError(e)),
+         );
     }
 
     clearUser() {
         this.setUser(null);
+    }
+
+    login(headers: HttpHeaders) {
+        return this.http.post(`${environment.apiUrl}`+'/api/auth/login', null, {headers: headers})
+        .pipe(catchError((e) => this.errorHandlingService.handleError(e)));
+    }
+
+    logout() {
+        
     }
 }

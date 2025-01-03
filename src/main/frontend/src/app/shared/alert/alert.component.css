@@ -1,0 +1,40 @@
+.alert-error {
+    display: flex;
+    justify-content: center;
+}
+
+.alert-icon {
+    padding: 0px 0px 0px 0px;
+}
+
+.alert-message {
+    padding: 10px 10px 0px 10px;
+    margin: 0px 0px 0px 0px;
+    border-radius: 6px;
+    font-size: 1.2rem;
+    font-weight: 400;
+    display: flex;
+    color: #842029;
+    background: #f8d7da;
+    border: 2px solid black;
+}
+
+.success {
+    color: #0f5132;
+    background: #d1e7dd;
+}
+
+.info {
+    color: #055160;
+    background: #cff4fc;
+}
+
+.warning {
+    color: #664d03;
+    background: #fff3cd;
+}
+
+.alertError {
+    color: #842029;
+    background: #f8d7da;
+}

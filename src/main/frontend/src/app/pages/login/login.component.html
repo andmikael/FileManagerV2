@@ -1,11 +1,12 @@
+
 <h2>Use Azure connection string to login</h2>
+<app-alert/>
 <app-login-form (EmitLoginString)="login($event)"></app-login-form>
 <div class="trial-div">
     <div id="trial-text">
         <h2>Or use a trial storage account</h2>
     </div>
     <div id="trial-button-row">
-        <button id="trial-button" (click)="selectTrialAccount()">Use trial account</button> 
+        <button id="trial-button" (click)="loginWithTrial()">Use trial account</button> 
     </div>
-    <button id="trial-button" (click)="getTest()">Use trial account</button> 
 </div>

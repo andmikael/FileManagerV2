@@ -20,6 +20,7 @@ public class BlobStorageService implements BlobStorage {
     private PagedIterable<BlobContainerItem> listOfBlobContainers;
     private String connectionString = null;
     private String accountType = null;
+    @SuppressWarnings("unused")
     private String urlPrefix = null;
     private BlobServiceClient client = null;
     private BlobContainerClient containerClient = null;
@@ -65,6 +66,9 @@ public class BlobStorageService implements BlobStorage {
     @Override
     public Boolean init(String connString) {
         System.out.println(connString);
+        if (connString == null) {
+            return false;
+        }
         if (connString.contains("trial")) {
             try {
                 this.client = new BlobServiceClientBuilder()
@@ -86,7 +90,6 @@ public class BlobStorageService implements BlobStorage {
                 return false;
             }
         }
-
         listOfBlobContainers = this.fetchBlobContainers();
         return true;
     }

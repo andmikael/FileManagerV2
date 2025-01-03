@@ -20,22 +20,21 @@ public class BlobAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        BlobAuthentication blobAuthentication = (BlobAuthentication) authentication;
-        String headerKey = blobAuthentication.getConnString();
-        String userRole = blobAuthentication.getUserRole();
-
-        if (!this.blobStorage.init(headerKey) || headerKey == null) {
-            throw new BadCredentialsException("auth error: wrong conn string");
-        }
-
-        blobAuthentication.setAuthenticated(true);
-        blobAuthentication.setUserPrincipal(new UserPrincipal(new User(userRole)));
-        return blobAuthentication;
+            BlobAuthentication blobAuthentication = (BlobAuthentication) authentication;
+            String headerKey = blobAuthentication.getConnString();
+            String userRole = blobAuthentication.getUserRole();
+    
+            if (!this.blobStorage.init(headerKey) || headerKey == null) {
+                throw new BadCredentialsException("auth error: wrong conn string");
+            }
+    
+            blobAuthentication.setAuthenticated(true);
+            blobAuthentication.setUserPrincipal(new UserPrincipal(new User(userRole)));
+            return blobAuthentication;
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
         return BlobAuthentication.class.equals(authentication);
     }
-    
 }

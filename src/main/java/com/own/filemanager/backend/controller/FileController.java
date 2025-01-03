@@ -34,19 +34,16 @@ public class FileController {
 
     @GetMapping(value="/")
     public ResponseEntity<?> switchControllers() {
+        
         Map<String, List<String>> blobs = new HashMap<>();
         this.listOfBlobs = blobStorage.getBlobs();
         List<String> allBlobs = new ArrayList<>();
         for (BlobItem elem : this.listOfBlobs) {
             allBlobs.add(elem.getName());
         }
-
-        //HttpHeaders headers = new HttpHeaders();
-        //headers.set("Content-Type", "application/json");
         Gson gson = new Gson();
         blobs.put("blobs", allBlobs);
         String json = gson.toJson(blobs);
-        //return new ResponseEntity<>(json, headers, HttpStatus.OK);
         return new ResponseEntity<>(json, HttpStatus.OK);
     }
 

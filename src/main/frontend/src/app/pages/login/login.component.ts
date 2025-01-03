@@ -3,21 +3,24 @@ import { LoginFormComponent } from "./login-form/login-form.component";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { lastValueFrom, Observable, of, map, take } from 'rxjs';
+import { lastValueFrom, Observable, of, map, take, catchError, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { AlertComponent } from '../../shared/alert/alert.component';
+import { AlertService } from '../../services/alert.service';
+import { AlertTypeEnum } from '../../shared/alert/alert.type.enum';
+import { UserService } from '../../services/user.service';
+import { ApiError } from '../../models/api.model';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [LoginFormComponent, CommonModule],
+  imports: [LoginFormComponent, CommonModule, AlertComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  constructor() {
-  }
-  showError: boolean = false;
-  errorMessage: string = '';
+  constructor(private alertService: AlertService,
+    private userService: UserService) {}
   http: HttpClient = inject(HttpClient);
   router: Router = inject(Router);
   containers: any
@@ -27,50 +30,36 @@ export class LoginComponent {
   const headers = new HttpHeaders({
     'Authorization': authorizationData
   , 'UserRole' : 'user'})
-
-    this.http.post(`${environment.apiUrl}`+'/api/auth/', null, {headers: headers})
-    .subscribe({
-      next: (response) => {
-        localStorage.setItem('isLoggedIn', '1');
-        this.navigateToContainer();
-      },
-      error: (error) => { 
-        console.error(error);
-        this.showError = true;
-        this.errorMessage = 'Invalid connection string'; 
-      }
-    });
+    this.userService.login(headers)
+    .pipe(take(1)
+    ,tap(() => {
+      this.router.navigate(["/containers"]);
+    }), 
+    catchError((e: ApiError) => {
+        this.alertService.setAlert(e);
+        return of();
+    })
+  ).subscribe();
   }
 
   navigateToContainer() {
     this.router.navigate(["/containers"]);
   }
 
-  selectTrialAccount() {
-    this.http.post(`${environment.apiUrl}`+'/api/auth/login', "trial")
-    .subscribe({
-      next: (response) => {
-        localStorage.setItem('isLoggedIn', '1');
-        this.navigateToContainer();
-      },
-      error: (error) => { 
-        console.error(error);
-        this.showError = true;
-        this.errorMessage = 'was unable to login to trial account'; 
-      }
-    });
-  }
-
-  getTest() {
-    this.http.get(`${environment.apiUrl}`+'/api/auth/')
-    .subscribe({
-      next: (response) => {
-      },
-      error: (error) => { 
-        console.error(error);
-        this.showError = true;
-        this.errorMessage = 'was unable to login to trial account'; 
-      }
-    });
+  loginWithTrial() {
+    let authorizationData = 'Basic ' + btoa("trial" + "");
+    const headers = new HttpHeaders({
+      'Authorization': authorizationData
+    , 'UserRole' : 'trial'})
+    this.userService.login(headers)
+      .pipe(take(1)
+      ,tap(() => {
+        this.router.navigate(["/containers"]);
+      }), 
+      catchError((e: ApiError) => {
+          this.alertService.setAlert(e);
+          return of();
+      })
+    ).subscribe();
   }
 }
