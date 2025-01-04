@@ -35,7 +35,7 @@ export class LoginComponent {
     this.http.post<any>(`${environment.apiUrl}/api/auth/login`, null, { headers })
       .pipe(
         tap(() => {
-          localStorage.setItem('isLoggedIn', '1');
+          this.authService.setLoggedIn(true);
           this.navigateToContainer();
         }),
         catchError((e) => {
@@ -58,7 +58,7 @@ export class LoginComponent {
     this.http.post<any>(`${environment.apiUrl}/api/auth/login`, null, { headers })
       .pipe(
         tap(() => {
-          localStorage.setItem('isLoggedIn', '1');
+          this.authService.setLoggedIn(true);
           this.navigateToContainer();
         }),
         catchError((e) => {

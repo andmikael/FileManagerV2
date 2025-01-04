@@ -9,6 +9,7 @@ import { Injectable } from "@angular/core";
   })
 
 export class AuthService {
+    private isLoggedIn = false;
     constructor(
         private http: HttpClient,
         private errorHandlingService: ErrorHandlerService,
@@ -17,5 +18,13 @@ export class AuthService {
     login(headers: HttpHeaders) {
         return this.http.post(`${environment.apiUrl}`+'/api/auth/login', {headers: headers})
         .pipe(catchError((e) => this.errorHandlingService.handleError(e)));
+    }
+
+    setLoggedIn(val: boolean) {
+        this.isLoggedIn = val;
+    }
+
+    getLoggedInStatus() {
+        return this.isLoggedIn;
     }
 }
