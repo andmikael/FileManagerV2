@@ -59,8 +59,7 @@ public class SecurityConfig {
         .logout((logout) -> logout.logoutUrl("/api/auth/logout")
         .addLogoutHandler(clientLogoutHandler)
         .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-        .invalidateHttpSession(true)
-        .deleteCookies("JSESSIONID"))
+        .invalidateHttpSession(true))
         .exceptionHandling((exception) -> exception.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
         .securityContext((securityContext) -> securityContext
 			.securityContextRepository(new DelegatingSecurityContextRepository(

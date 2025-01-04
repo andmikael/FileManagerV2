@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../../services/user.service';
@@ -18,9 +18,8 @@ import { CookieOptions } from 'express';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class NavbarComponent {
-  //user$ = this.userService.user$
-  isLoggedIn = localStorage.getItem('isLoggedIn')
+export class NavbarComponent implements AfterViewInit{
+  isLoggedIn: any
 
   constructor(
     private readonly userService: UserService,
@@ -30,6 +29,9 @@ export class NavbarComponent {
   ) {
     this.loadUser();
   }
+  ngAfterViewInit(): void {
+    this.isLoggedIn = localStorage.getItem('isLoggedIn')
+  }
 
   logout() {
       this.http.post<any>(`${environment.apiUrl}/api/auth/logout`, null)
@@ -37,6 +39,7 @@ export class NavbarComponent {
           tap(() => {
             localStorage.removeItem('isLoggedIn')
             this.router.navigate(['/']);
+            this.ngAfterViewInit();
           }),
           catchError((e) => this.errorHandlingService.handleError(e))
         ).subscribe()

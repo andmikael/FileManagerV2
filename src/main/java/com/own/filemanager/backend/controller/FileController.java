@@ -22,7 +22,7 @@ import com.own.filemanager.backend.service.BlobStorage;
 
 @Controller
 @SessionScope
-@RequestMapping("/api/index/login")
+@RequestMapping("/api/index")
 public class FileController {
 
     private final BlobStorage blobStorage;
@@ -34,7 +34,7 @@ public class FileController {
 
     @GetMapping(value="/")
     public ResponseEntity<?> switchControllers() {
-        
+
         Map<String, List<String>> blobs = new HashMap<>();
         this.listOfBlobs = blobStorage.getBlobs();
         List<String> allBlobs = new ArrayList<>();

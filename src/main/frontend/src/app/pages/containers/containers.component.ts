@@ -69,7 +69,7 @@ export class ContainersComponent {
   }
 
   selectContainer() {
-    this.http.post(`${environment.apiUrl}`+"/api/containers/selectcontainer", this.selectedContainer)
+    this.http.post(`${environment.apiUrl}`+"/api/containers/selectcontainer", this.selectedContainer, { observe: 'response', responseType: 'text'})
     .subscribe({
       next: (response) => {
         this.navigateToIndex();
@@ -81,7 +81,7 @@ export class ContainersComponent {
   }
 
   deleteContainer() {
-    this.http.post(`${environment.apiUrl}`+"/api/containers/deletecontainer", this.selectedContainer, { observe: 'response'})
+    this.http.post(`${environment.apiUrl}`+"/api/containers/deletecontainer", this.selectedContainer, { observe: 'response', responseType: 'text'})
     .subscribe({
       next: (response) => {
         this.populateList();
@@ -93,7 +93,7 @@ export class ContainersComponent {
   }
 
   onCreateSubmit(containerForm: NgForm) {
-    this.http.post(`${environment.apiUrl}`+"/api/containers/createcontainer", containerForm.value["container-name"], { observe: 'response'})
+    this.http.post(`${environment.apiUrl}`+"/api/containers/createcontainer", containerForm.value["container-name"], { observe: 'response', responseType: 'text'})
     .subscribe({
       next: (response) => {
         if (response.status == 201) {

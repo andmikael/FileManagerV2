@@ -19,9 +19,7 @@ import com.azure.storage.blob.models.BlobItem;
 public class BlobStorageService implements BlobStorage {
     private PagedIterable<BlobContainerItem> listOfBlobContainers;
     private String connectionString = null;
-    private String accountType = null;
     @SuppressWarnings("unused")
-    private String urlPrefix = null;
     private BlobServiceClient client = null;
     private BlobContainerClient containerClient = null;
     
@@ -36,7 +34,6 @@ public class BlobStorageService implements BlobStorage {
 
     @Override
     public Boolean init(String connString) {
-        System.out.println(connString);
         if (connString == null) {
             return false;
         }
@@ -87,21 +84,14 @@ public class BlobStorageService implements BlobStorage {
 
     @Override
     public void logout() {
-        System.out.println("logging user out");
         this.client = null;
         this.containerClient = null;
-        this.urlPrefix = null;
         this.connectionString = null;
     }
 
     @Override
     public Boolean getClientState() {
         return this.client != null;
-    }
-
-    @Override
-    public String getAccountType() {
-        return this.accountType;
     }
 
     @Override

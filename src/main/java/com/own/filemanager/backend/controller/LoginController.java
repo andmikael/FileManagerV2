@@ -40,19 +40,12 @@ public class LoginController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> handleLogout(HttpServletRequest request) {
-        /*HttpSession session = request.getSession(false);
-        SecurityContextHolder.clearContext();
-        this.blobStorage.logout();
-        if (session != null) {
-            session.invalidate();
-        }*/
         return new ResponseEntity<>("", HttpStatus.OK);
     }
     
     @GetMapping("/user")
     public ResponseEntity<?> getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("value of current user: " + auth);
         Gson gson = new Gson();
         Map<String, String> user = new HashMap<>();
         String json = null;

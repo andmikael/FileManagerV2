@@ -21,11 +21,14 @@ import com.azure.storage.blob.models.BlobContainerItem;
 import com.nimbusds.jose.shaded.gson.Gson;
 import com.own.filemanager.backend.service.BlobStorage;
 
+import net.minidev.json.JSONObject;
+
 @Controller
 @SessionScope
 @RequestMapping("/api/containers")
 public class ContainerController {
     private final BlobStorage blobStorage;
+    Gson gson = new Gson();
 
     public ContainerController(BlobStorage blobStorage) {
         this.blobStorage = blobStorage;
@@ -33,8 +36,6 @@ public class ContainerController {
 
     @GetMapping("/")
     public ResponseEntity<?> populateDropDown(){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(auth.getAuthorities());
         Map<String, ArrayList<String>> containers = new HashMap<>();
         PagedIterable<BlobContainerItem> foundContainers = blobStorage.getBlobContainers();
         if (foundContainers == null) {
@@ -42,15 +43,10 @@ public class ContainerController {
         }
         ArrayList<String> listOfContainers = new ArrayList<>();
         for (BlobContainerItem elem : foundContainers) {
-            System.out.println(elem.getName());
             listOfContainers.add(elem.getName());
         }
         containers.put("containers", listOfContainers);
-        Gson gson = new Gson();
         String json = gson.toJson(containers);
-        //HttpHeaders headers = new HttpHeaders();
-        //headers.set("Content-Type", "application/json");
-        //return new ResponseEntity<>(json, headers, HttpStatus.OK);
         return new ResponseEntity<>(json, HttpStatus.OK);
     }
 
@@ -58,12 +54,12 @@ public class ContainerController {
     public ResponseEntity<?> handleContainerSelection(@RequestBody String postBody) {
         blobStorage.createContainer(postBody);
         blobStorage.setContainerClient(blobStorage.getContainerClient(postBody));
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("success",HttpStatus.OK);
     }
 
     @PostMapping(value="/deletecontainer")
     public ResponseEntity<?> handleContainerDeletion(@RequestBody String postBody) {
-        if (this.blobStorage.getAccountType().contains("trial")) {
+        if (!SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString().equals("[ROLE_USER]")) {
             return new ResponseEntity<>("No permissions for deleting containers", HttpStatus.FORBIDDEN);
         }
 
@@ -85,9 +81,13 @@ public class ContainerController {
         return new ResponseEntity<>("Container Deleted", HttpStatus.ACCEPTED);
     }
 
+
+    // CURRENT BUG:
+    // if user deletes an existing container and immediately creates a new one with the same name without making a request between deletion and creation requests
+    // (eg. page refresh, creating a container with a different name etc. Azure api will give an exception. Needs to be investigated)
     @PostMapping(value="/createcontainer")
     public ResponseEntity<?> handleContainerCreation(@RequestBody String postBody) {
-        if (this.blobStorage.getAccountType().contains("trial")) {
+        if (!SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString().equals("[ROLE_USER]")) {
             return new ResponseEntity<>("No permission to create containers", HttpStatus.FORBIDDEN);
         }
 
@@ -100,6 +100,7 @@ public class ContainerController {
                 return new ResponseEntity<>("Container name contains illegal characters.",HttpStatus.BAD_REQUEST);
             }
         }
+
         if (statusCode == 409) {
             return new ResponseEntity<>("Container already exists", HttpStatus.CONFLICT);
         }

@@ -21,7 +21,7 @@ public class LoggingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        System.out.println("-------------- listing request headers -------------------");
+        /*System.out.println("-------------- listing request headers -------------------");
         Collections.list(request.getHeaderNames()).forEach(header -> {
             log.info("Header: {}={}", header, request.getHeader(header));
         });
@@ -33,7 +33,7 @@ public class LoggingFilter extends OncePerRequestFilter {
             for (String e : theList) {
                 log.info("Header: {}={}", e, response.getHeader(e));
              }
-        }
+        }*/
 
         filterChain.doFilter(request, response);
     }

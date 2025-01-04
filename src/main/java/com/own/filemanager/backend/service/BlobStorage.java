@@ -12,7 +12,6 @@ import com.azure.storage.blob.models.BlobItem;
 public interface BlobStorage {
     Boolean init(String type);
     BlobServiceClient createServiceClient(String type);
-    String getAccountType();
     Boolean getClientState();
     void logout();
     void setConnString(String connString) throws java.lang.IllegalArgumentException;
