@@ -12,8 +12,9 @@ import { ErrorHandlerService } from "./error.handler.service";
 
 export class UserService {
 
-    readonly user$: BehaviorSubject<ApiUser | null> =
-    new BehaviorSubject<ApiUser | null>(null);
+    user$: any
+    //user$: BehaviorSubject<ApiUser | null> =
+    //new BehaviorSubject<ApiUser | null>(null);
 
     
     constructor(
@@ -35,6 +36,7 @@ export class UserService {
 
     clearUser() {
         this.setUser(null);
+        localStorage.removeItem('isLoggedIn');
     }
 
     login(headers: HttpHeaders) {
@@ -42,7 +44,9 @@ export class UserService {
         .pipe(catchError((e) => this.errorHandlingService.handleError(e)));
     }
 
-    logout() {
-        
+    logOut() {
+        console.log("logging out / angular");
+        return this.http.post(`${environment.apiUrl}`+'/api/auth/logout', null)
+        .pipe(catchError((e) => this.errorHandlingService.handleError(e)))
     }
 }

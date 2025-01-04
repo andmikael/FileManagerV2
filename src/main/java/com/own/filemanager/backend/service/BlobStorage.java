@@ -5,12 +5,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.models.BlobContainerItem;
 import com.azure.storage.blob.models.BlobItem;
 
 public interface BlobStorage {
-    Boolean init();
     Boolean init(String type);
+    BlobServiceClient createServiceClient(String type);
     String getAccountType();
     Boolean getClientState();
     void logout();

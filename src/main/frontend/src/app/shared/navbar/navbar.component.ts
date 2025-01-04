@@ -3,7 +3,11 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../../services/user.service';
-import { map, take, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, of, take, tap } from 'rxjs';
+import { ApiUser } from '../../models/api.model';
+import { environment } from '../../../environments/environment';
+import { ErrorHandlerService } from '../../services/error.handler.service';
+import { CookieOptions } from 'express';
 
 @Component({
   selector: 'app-navbar',
@@ -15,38 +19,32 @@ import { map, take, tap } from 'rxjs';
 })
 
 export class NavbarComponent {
-  user$ = this.userService.user$
-
-  readonly isLoggedIn$ = this.user$.pipe(map((user) => !!user));
+  //user$ = this.userService.user$
+  isLoggedIn = localStorage.getItem('isLoggedIn')
 
   constructor(
     private readonly userService: UserService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly http: HttpClient,
+    private readonly errorHandlingService: ErrorHandlerService,
   ) {
     this.loadUser();
   }
 
-  logout(): void {
-    /*this.authService.logout().pipe(take(1)).subscribe();
-    this.userService.clearUser();
-    this.router.navigate(['/']);*/
+  logout() {
+      this.http.post<any>(`${environment.apiUrl}/api/auth/logout`, null)
+        .pipe(
+          tap(() => {
+            localStorage.removeItem('isLoggedIn')
+            this.router.navigate(['/']);
+          }),
+          catchError((e) => this.errorHandlingService.handleError(e))
+        ).subscribe()
   }
 
   login() {
-    if (this.userService.user$ == null) {
-      this.router.navigate(['/']);
-    }
   }
 
   loadUser()  {
-    this.userService
-    .getUser()
-      .pipe(
-        take(1),
-        tap(() => {
-            localStorage.setItem('isLoggedIn', '1');
-          }),
-      )
-      .subscribe();
   }
 }

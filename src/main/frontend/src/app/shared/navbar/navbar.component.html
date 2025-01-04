@@ -1,9 +1,10 @@
-<ng-container *ngTemplateOutlet="navbar; context: { user: user$ | async }"/>
-    <ng-template #navbar let-user="user">
+<ng-container *ngTemplateOutlet="navbar; context: { isLoggedIn : isLoggedIn }"/>
+    <ng-template #navbar let-user="isLoggedIn">
         <div class = "nav-contaner">
             <nav class ="page-nav">
                 <div class ="nav-button">
                     @if (user) {
+
                         <button>CONTAINERS</button>
                         <button (click)="logout()">LOGOUT</button>
                     } @else {

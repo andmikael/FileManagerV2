@@ -28,16 +28,22 @@ public class BlobAuthenticationFilter extends OncePerRequestFilter {
     // if token is correct, a new session ID will be created user is remembered until they log out
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getRequestedSessionId() == null) {
+        //if (request.getRequestedSessionId() == null) {
             String headerKey = request.getHeader("Authorization");
             String userRole = request.getHeader("UserRole");
+
+            System.out.println("encoded key: "+headerKey);
+            System.out.println("user role in header: " +userRole);
     
-            String authKey = new String();
+            String authKey = "";
             if (headerKey != null) {
                 String[] key = headerKey.split(" ");
-                authKey = key[1].replaceAll("\\s+","");
+                if (key.length > 1) {
+                    authKey = key[1].replaceAll("\\s+","");
+                }
 
                 String decodedString = new String(Base64.getDecoder().decode(authKey), StandardCharsets.UTF_8);
+                System.out.println("decoded key: "+decodedString);
                 BlobAuthentication blobAuthentication = new BlobAuthentication(false, decodedString, userRole);
                 Authentication authObj = blobAuthenticationManager.authenticate(blobAuthentication);
                 if (authObj.isAuthenticated()) {
@@ -47,7 +53,7 @@ public class BlobAuthenticationFilter extends OncePerRequestFilter {
                     securityContextRepository.saveContext(context, request, response);
                 }
             }
-        }
+       // }
         filterChain.doFilter(request, response);
     }
     

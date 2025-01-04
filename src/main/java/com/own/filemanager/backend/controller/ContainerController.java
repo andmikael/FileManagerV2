@@ -34,7 +34,7 @@ public class ContainerController {
     @GetMapping("/")
     public ResponseEntity<?> populateDropDown(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(auth);
+        System.out.println(auth.getAuthorities());
         Map<String, ArrayList<String>> containers = new HashMap<>();
         PagedIterable<BlobContainerItem> foundContainers = blobStorage.getBlobContainers();
         if (foundContainers == null) {
