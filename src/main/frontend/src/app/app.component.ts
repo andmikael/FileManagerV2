@@ -4,6 +4,7 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { AlertComponent } from './shared/alert/alert.component';
 import { AlertTypeEnum } from './shared/alert/alert.type.enum';
 import { AlertService } from './services/alert.service';
+import { LandingComponent } from './pages/landing/landing.component';
 
 
 @Component({
@@ -11,7 +12,8 @@ import { AlertService } from './services/alert.service';
   imports: [
     RouterOutlet,
     RouterModule,
-    NavbarComponent,],
+    NavbarComponent,
+  LandingComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

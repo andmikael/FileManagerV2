@@ -1,8 +1,15 @@
 body {
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  html,
+  body {
+    height: 100%;
     background-color: #fbf1c7;
     color: #282828;
-    font-family: monospace;
+  }
+  
+  body {
     display: flex;
     flex-direction: column;
-    margin: 0px;
-}
+  }
