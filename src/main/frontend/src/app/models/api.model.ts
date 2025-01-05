@@ -1,15 +1,26 @@
+import { AlertTypeEnum } from "../shared/alert/alert.type.enum";
+
+
 export interface ApiError<T = void> {
-    code: string;
+    code: number;
     message?: string;
     isError: boolean;
-    data?: T;
   }
 
   export interface ApiUser {
-    accountType: string
+    role: string
   }
 
   export interface BlobsModel {
     blobs: String[];
     containerName: String;
   }
+
+  interface ResError extends Error {
+    status?: number;
+}
+
+export interface AlertInterface {
+    type: AlertTypeEnum
+    text: string
+}

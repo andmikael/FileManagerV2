@@ -1,11 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Injectable } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../../services/auth.service';
-import { take, tap } from 'rxjs';
 import { UserService } from '../../services/user.service';
+import { BehaviorSubject, catchError, map, of, take, tap } from 'rxjs';
+import { ApiUser } from '../../models/api.model';
+import { environment } from '../../../environments/environment';
+import { ErrorHandlerService } from '../../services/error.handler.service';
+import { CookieOptions } from 'express';
+import { authGuard } from '../../guards/auth.guard';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,37 +20,61 @@ import { UserService } from '../../services/user.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class NavbarComponent {
-  http: HttpClient = inject(HttpClient);
-  router: Router = inject(Router);
-  user$: any
+export class NavbarComponent implements OnInit{
+  isLoggedIn: any
+  user$ : BehaviorSubject<ApiUser | null> = new BehaviorSubject<ApiUser | null>(null);
 
   constructor(
-    private readonly authService: AuthService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly router: Router,
+    private readonly http: HttpClient,
+    private readonly errorHandlingService: ErrorHandlerService,
+    private authService: AuthService,
   ) {
-    this.user$ = this.userService.user$
-    //this.loadUser();
+    this.loadUser();
+  }
+  ngOnInit(): void {
+    this.router.events.pipe(
+      tap((e) => {
+        if(e.constructor.name === "NavigationEnd") {
+          this.loadUser();
+        }
+      })
+   ).subscribe()
   }
 
-  logout(): void {
-    this.authService.logout().pipe(take(1)).subscribe();
-    this.userService.clearUser();
-    this.router.navigate(['/']);
-
+  logout() {
+      this.http.post<any>(`${environment.apiUrl}/api/auth/logout`, null)
+        .pipe(
+          tap(() => {
+            this.authService.setLoggedIn(false);
+            if (this.router.url === "/") {
+              window.location.reload();
+            }
+            this.router.navigate(['/']);
+          }),
+          catchError((e) => this.errorHandlingService.handleError(e))
+        ).subscribe()
   }
 
   login() {
-    if (this.userService.user$ == null) {
-      this.router.navigate(['/']);
-    }
   }
 
-  /*loadUser() {
-    this.userService
-    .getUser().pipe(
-      take(1),
-      tap(() => {}
-    ),).subscribe();
-  }*/
+  loadUser()  {
+    this.http.get<ApiUser>(`${environment.apiUrl}/api/auth/user`)
+    .subscribe({
+      next: (user) => {
+        if ((user.role === "ROLE_USER" || user.role === "ROLE_TRIAL")) {
+          this.user$.next(user);
+          if (!this.authService.getLoggedInStatus()) {
+            this.authService.setLoggedIn(true);
+          }
+        } else {
+          this.user$ = new BehaviorSubject<ApiUser | null>(null);
+        }
+      }, error: (e) => {
+        console.log(e);
+      }
+    })
+  }
 }

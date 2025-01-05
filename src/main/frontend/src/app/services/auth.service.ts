@@ -1,20 +1,30 @@
-import { inject, Inject, Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { ErrorHandlerService } from "./error.handler.service";
+import { catchError } from "rxjs";
 import { environment } from "../../environments/environment";
-import { HttpClient } from "@angular/common/http";
-import { Router } from "@angular/router";
+import { Injectable } from "@angular/core";
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
   })
 
 export class AuthService {
-    constructor() {}
+    private isLoggedIn = false;
+    constructor(
+        private http: HttpClient,
+        private errorHandlingService: ErrorHandlerService,
+    ) {}
 
-    http: HttpClient = inject(HttpClient);
-    router: Router = inject(Router);
+    login(headers: HttpHeaders) {
+        return this.http.post(`${environment.apiUrl}`+'/api/auth/login', {headers: headers})
+        .pipe(catchError((e) => this.errorHandlingService.handleError(e)));
+    }
 
-    logout() {
-        localStorage.removeItem('isLoggedIn');
-        return this.http.post<void>(`${environment.apiUrl}`+'/api/auth/logout', {})
+    setLoggedIn(val: boolean) {
+        this.isLoggedIn = val;
+    }
+
+    getLoggedInStatus() {
+        return this.isLoggedIn;
     }
 }

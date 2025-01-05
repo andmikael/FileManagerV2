@@ -19,8 +19,7 @@ import com.azure.storage.blob.models.BlobItem;
 public class BlobStorageService implements BlobStorage {
     private PagedIterable<BlobContainerItem> listOfBlobContainers;
     private String connectionString = null;
-    private String accountType = null;
-    private String urlPrefix = null;
+    @SuppressWarnings("unused")
     private BlobServiceClient client = null;
     private BlobContainerClient containerClient = null;
     
@@ -31,82 +30,68 @@ public class BlobStorageService implements BlobStorage {
     @Override
     public void setConnString(String connString) {
         this.connectionString = connString;
-    }   
+    }
 
-    @Override 
-    public Boolean init() {
-        if (this.connectionString.contains("trial")) {
+    @Override
+    public Boolean init(String connString) {
+        if (connString == null) {
+            return false;
+        }
+        if (connString.contains("trial")) {
             try {
-                this.client = new BlobServiceClientBuilder()
-                .endpoint(System.getenv("AZURE_TRIAL_STORAGE_ENDPOINT"))
-                .connectionString(System.getenv("TRIAL_CONN_STRING"))
-                .buildClient();
-                this.accountType = "trial";
+                this.client = createServiceClient(connString);
             } catch(java.lang.IllegalArgumentException e) {
                 return false;
             }
-
         } else {
             try {
-                this.client = new BlobServiceClientBuilder()
-                .endpoint(System.getenv("AZURE_STORAGE_URL_ENDPOINT"))
-                .connectionString(this.connectionString)
-                .buildClient();
-                this.accountType = "user";
-            } catch(java.lang.IllegalArgumentException e) {
+                this.client = createServiceClient(connString);
+            } catch(Exception e) {
                 return false;
             }
         }
-
         listOfBlobContainers = this.fetchBlobContainers();
         return true;
     }
 
     @Override
-    public Boolean init(String connString) {
-        System.out.println(connString);
+    public BlobServiceClient createServiceClient(String connString) {
+        BlobServiceClient newClient = null;
+        if (connString == null) {
+            return null;
+        }
         if (connString.contains("trial")) {
             try {
-                this.client = new BlobServiceClientBuilder()
+                newClient = new BlobServiceClientBuilder()
                 .endpoint(System.getenv("AZURE_TRIAL_STORAGE_ENDPOINT"))
                 .connectionString(System.getenv("TRIAL_CONN_STRING"))
                 .buildClient();
-                this.accountType = "trial";
             } catch(java.lang.IllegalArgumentException e) {
-                return false;
+                return null;
             }
         } else {
             try {
-                this.client = new BlobServiceClientBuilder()
+                newClient = new BlobServiceClientBuilder()
                 .endpoint(System.getenv("AZURE_STORAGE_URL_ENDPOINT"))
                 .connectionString(connString)
                 .buildClient();
-                this.accountType = "user";
             } catch(Exception e) {
-                return false;
+                return null;
             }
         }
-
-        listOfBlobContainers = this.fetchBlobContainers();
-        return true;
+        return newClient;
     }
 
     @Override
     public void logout() {
         this.client = null;
         this.containerClient = null;
-        this.urlPrefix = null;
         this.connectionString = null;
     }
 
     @Override
     public Boolean getClientState() {
         return this.client != null;
-    }
-
-    @Override
-    public String getAccountType() {
-        return this.accountType;
     }
 
     @Override
