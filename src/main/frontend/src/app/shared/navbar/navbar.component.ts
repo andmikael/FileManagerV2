@@ -58,6 +58,9 @@ export class NavbarComponent implements OnInit{
   }
 
   login() {
+    if (!this.authService.getLoggedInStatus()) {
+      this.router.navigate(['login']);
+    }
   }
 
   loadUser()  {
@@ -76,5 +79,12 @@ export class NavbarComponent implements OnInit{
         console.log(e);
       }
     })
+  }
+  goToHome() {
+    this.router.navigate([""]);
+  }
+
+  goToContainers() {
+    this.router.navigate(["containers"]);
   }
 }

@@ -21,13 +21,13 @@ li {
 }
 
 input::file-selector-button {
+  font-family: 'Montserrat', sans-serif;
   background-color: #6200ea;
   color: #fff;
   border: none;
   margin: 0px 10px;
   padding: 10px 25px;
   font-size: 1rem;
-  text-transform: uppercase;
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
@@ -40,13 +40,13 @@ input::file-selector-button:hover {
 }
 
 #upload-button {
+  font-family: 'Montserrat', sans-serif;
   background-color: #6200ea;
   color: #fff;
   border: none;
   margin: 0px 10px;
   padding: 10px 25px;
   font-size: 16px;
-  text-transform: uppercase;
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;

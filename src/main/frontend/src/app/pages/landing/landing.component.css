@@ -12,6 +12,10 @@
     border-width: 0;
     border-style: solid;
     border-color: #e5e7eb;
+    background-color: rgb(230, 225, 216);
+    margin: 2rem;
+    border-radius: 0.6rem;
+    max-width: 1280px;
 }
 
 #infotitle {
