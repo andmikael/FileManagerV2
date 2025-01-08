@@ -13,6 +13,7 @@ import { ErrorHandlerService } from "./error.handler.service";
 export class UserService {
 
     user$: any
+    role: any
     //user$: BehaviorSubject<ApiUser | null> =
     //new BehaviorSubject<ApiUser | null>(null);
 
@@ -32,6 +33,14 @@ export class UserService {
            tap((user) => this.setUser(user)),
            catchError((e) => this.errorHandlingService.handleError(e)),
          );
+    }
+
+    getRole() {
+        return this.role;
+    }
+
+    setRole(role: string) {
+        this.role = role;
     }
 
     clearUser() {

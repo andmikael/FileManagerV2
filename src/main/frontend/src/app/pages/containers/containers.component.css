@@ -67,3 +67,8 @@ select {
     justify-content: center;
     align-items: center;
 }
+
+#delete-button-unusable,
+#create-button-unusable {
+    opacity: 0.5;
+}

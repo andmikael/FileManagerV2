@@ -1,19 +1,19 @@
 <ng-container *ngTemplateOutlet="navbar; context: { user : user$ | async }"/>
     <ng-template #navbar let-user="user">
-        <div class = "nav-container">
-            <nav class ="page-nav">
-                <div class="website-icon">
-                </div>
-                <div class ="nav-button-container">
-                    <button class="nav-button" (click)="goToHome()">Home</button>
-                    @if (user) {
-                        <button class="nav-button" (click)="goToContainers()">Containers</button>
-                        <button class="nav-button" (click)="logout()">Logout</button>
-                    } @else {
-                        <button class="nav-button" (click)="login()">Login</button>
-                    }
-                </div>
-                <!--<a id="logout-button" routerLink="/" (click)="logout()">LOGOUT</a>-->
-            </nav>
-        </div>
-    </ng-template>
+            <div class = "nav-container">
+                <nav class ="page-nav">
+                    <div class="website-icon">
+                    </div>
+                    <div class ="nav-button-container">
+                        <button class="nav-button" (click)="goToHome()">Home</button>
+                        @if (user) {
+                            <button class="nav-button" (click)="goToContainers()">Containers</button>
+                            <button class="nav-button" (click)="logout()">Logout</button>
+                        } @else {
+                            <button class="nav-button" (click)="login()">Login</button>
+                        }
+                    </div>
+                    <!--<a id="logout-button" routerLink="/" (click)="logout()">LOGOUT</a>-->
+                </nav>
+            </div>
+        </ng-template>
