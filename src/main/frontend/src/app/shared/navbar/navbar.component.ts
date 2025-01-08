@@ -22,6 +22,7 @@ import { AuthService } from '../../services/auth.service';
 
 export class NavbarComponent implements OnInit{
   isLoggedIn: any
+  showComponent = true;
   user$ : BehaviorSubject<ApiUser | null> = new BehaviorSubject<ApiUser | null>(null);
 
   constructor(
@@ -36,7 +37,7 @@ export class NavbarComponent implements OnInit{
   ngOnInit(): void {
     this.router.events.pipe(
       tap((e) => {
-        if(e.constructor.name === "NavigationEnd") {
+        if(e.constructor.name === "NavigationStart") {
           this.loadUser();
         }
       })
@@ -58,6 +59,9 @@ export class NavbarComponent implements OnInit{
   }
 
   login() {
+    if (!this.authService.getLoggedInStatus()) {
+      this.router.navigate(['login']);
+    }
   }
 
   loadUser()  {
@@ -68,6 +72,7 @@ export class NavbarComponent implements OnInit{
           this.user$.next(user);
           if (!this.authService.getLoggedInStatus()) {
             this.authService.setLoggedIn(true);
+            this.userService.setRole(user.role);
           }
         } else {
           this.user$ = new BehaviorSubject<ApiUser | null>(null);
@@ -76,5 +81,12 @@ export class NavbarComponent implements OnInit{
         console.log(e);
       }
     })
+  }
+  goToHome() {
+    this.router.navigate([""]);
+  }
+
+  goToContainers() {
+    this.router.navigate(["containers"]);
   }
 }

@@ -36,6 +36,10 @@ button {
     align-items: center;
 }
 
+#trial-button {
+    font-family: 'Montserrat', sans-serif;
+}
+
 h2 {
     display: flex;
     justify-content: center;

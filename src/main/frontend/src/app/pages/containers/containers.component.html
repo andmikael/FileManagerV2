@@ -1,31 +1,49 @@
-<div class="form-container">
-	<h2 id = "welcome">Manage an existing container</h2>
-    <form id ="container-selector" method="POST" enctype="text/plain">    
-		<div>
-			<div class ="container-list">
-				<select id = "dropdown" name="container-name" [(ngModel)]="selectedContainer">
-					<option *ngFor="let container of receivedData$ | async" >{{container}}</option>
-				</select>
-			</div>
-				<button type="submit" id="select-button" name="select-button" (click)="selectContainer()">
-					Select container
-				</button>
-				<button type="submit" id="delete-button" name="delete-button" (click)="deleteContainer()">
-					Delete container
-				</button>
+<ng-container *ngTemplateOutlet="contaierComponent; context: { user : isLoggedIn }"/>
+    <ng-template #contaierComponent let-user="user">
+		<div class="form-container">
+			<h2 id = "welcome">Manage an existing container</h2>
+		    <form id ="container-selector" method="POST" enctype="text/plain">    
+				<div>
+					<div class ="container-list">
+						<select id = "dropdown" name="container-name" [(ngModel)]="selectedContainer">
+							<option *ngFor="let container of receivedData$ | async" >{{container}}</option>
+						</select>
+					</div>
+					@if (user) {
+						<button type="submit" id="select-button" name="select-button" (click)="selectContainer()">
+							Select container
+						</button>
+						<button type="submit" id="delete-button" name="delete-button" (click)="deleteContainer()">
+							Delete container
+						</button>
+					} @else {
+						<button type="submit" id="select-button" name="select-button" (click)="selectContainer()">
+							Select container
+						</button>
+						<button type="submit" disabled id="delete-button-unusable" name="delete-button">
+							Delete container
+						</button>
+					}
+				</div>
+			</form>	
+			<h2 id="create-message">Or create a new one</h2>
+		    <form #containerForm="ngForm" id ="container-creator" method="POST" enctype="text/plain" (ngSubmit)="onCreateSubmit(containerForm)">
+				<div>
+		            <div class="input-row">
+		                <input type="text" id="cont-name" name="container-name" ngModel>
+		            </div>
+		            <div class="button-row">
+						@if (user) {
+							<button type="submit" id="create-button" name="create-button">
+								Create container
+							</button>
+						} @else {
+							<button type="submit" disabled id="create-button-unusable" name="create-button">
+								Create container
+							</button>
+						}
+		            </div>
+				</div>
+			</form>
 		</div>
-	</form>	
-	<h2 id="create-message">Or create a new one</h2>
-    <form #containerForm="ngForm" id ="container-creator" method="POST" enctype="text/plain" (ngSubmit)="onCreateSubmit(containerForm)">
-		<div>
-            <div class="input-row">
-                <input type="text" id="cont-name" name="container-name" ngModel>
-            </div>
-            <div class="button-row">
-                <button type="submit" id="create-button" name="create-button">
-                    Create container
-                </button>
-            </div>
-		</div>
-	</form>
-</div>
+<ng-template/> 

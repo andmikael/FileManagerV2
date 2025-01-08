@@ -8,6 +8,7 @@ import { BehaviorSubject, catchError, first, firstValueFrom, fromEvent, lastValu
 import { environment } from '../../../environments/environment';
 import { ContainerService } from '../../services/container.service';
 import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-containers',
@@ -21,17 +22,24 @@ export class ContainersComponent {
 
   receivedData$: any
   selectedContainer: any;
+  isLoggedIn: any
 
   @Output() EmitContainerString: EventEmitter<JSON> = new EventEmitter<JSON>();
 
 
   constructor(private route: ActivatedRoute,
     private readonly containerService: ContainerService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly authService: AuthService
   ) {
-    this.userService.getUser()
+    
     this.receivedData$ = this.containerService.containers$;
     this.populateList();
+    if (userService.getRole() === "ROLE_TRIAL") {
+      this.isLoggedIn = false;
+    } else {
+      this.isLoggedIn = true;
+    }
   }
 
   http: HttpClient = inject(HttpClient);

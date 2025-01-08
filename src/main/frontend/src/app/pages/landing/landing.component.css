@@ -5,6 +5,11 @@
     flex-direction: column;
 }
 
+@keyframes fadeIn {
+    0% { opacity: 0;}
+    100% { opacity: 1;}
+}
+
 .infocontainer {
     display:flex;
     flex-direction: row;
@@ -12,6 +17,12 @@
     border-width: 0;
     border-style: solid;
     border-color: #e5e7eb;
+    background-color: rgb(230, 225, 216);
+    margin: 2rem;
+    border-radius: 0.6rem;
+    max-width: 1280px;
+    animation: fadeIn 0.75s;
+    transform: 2s translateY(0px);
 }
 
 #infotitle {
